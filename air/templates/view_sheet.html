@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{{ sheet_name }}</h1>
+
+<table style="width:100%">
+  {% for i in schema %}
+  <th>{{ i.column_name }}</th>
+  {% endfor %}
+</table>
+{% endblock %}
