@@ -45,11 +45,11 @@ def new_schema():
         return redirect(url_for('new_schema'))
     return render_template('new_schema.html', form=form)
 
-@app.route('/list/<sheet_name>')
-def list(sheet_name):
+@app.route('/view_sheet/<sheet_name>')
+def view_sheet(sheet_name):
     sheet = models.Sheets.query.filter_by(sheet_name=sheet_name).first()
-    schema = models.Sheets_Schema.query.filter_by(sheet=sheet.id).first()
-    return "{}".format(schema)
+    schema = models.Sheets_Schema.query.filter_by(sheet_id=sheet.id).all()
+    return render_template('view_sheet.html', schema=schema)
 
 if __name__ == "__main__":
     app.run(debug=True)
