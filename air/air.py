@@ -23,7 +23,9 @@ import models
 
 @app.route('/')
 def index():
-    return "Hello word"
+    # hard coding user id for the time being
+    sheets = models.Sheets.query.filter_by(user_id=1).all()
+    return render_template("index.html", sheets=sheets)
 
 @app.route('/create_new_sheet', methods=['GET', 'POST'])
 def create_new_sheet():
