@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2><a href="{{ url_for('create_new_sheet') }}">Create New Sheet</a></h2>
+
+</br></br>
+
+{% for sheet in sheets %}
+  <a href="{{ url_for('view_sheet', sheet_name=sheet.sheet_name) }}">{{ sheet.sheet_name }}</a>
+  </br>
+{% endfor %}
+
+{% endblock %}
