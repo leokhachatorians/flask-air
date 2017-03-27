@@ -25,8 +25,8 @@ import models
 def index():
     return "Hello word"
 
-@app.route('/new_schema', methods=['GET', 'POST'])
-def new_schema():
+@app.route('/create_new_sheet', methods=['GET', 'POST'])
+def create_new_sheet():
     form = forms.NewSheetForm(request.form)
     if request.method == 'POST' and form.validate():
         sheet = models.Sheets(1, form.sheet_name.data)
@@ -42,8 +42,8 @@ def new_schema():
 
         db.session.commit()
         helpers.generate_table(data)
-        return redirect(url_for('new_schema'))
-    return render_template('new_schema.html', form=form)
+        return redirect(url_for('create_new_sheet'))
+    return render_template('create_new_sheet.html', form=form)
 
 @app.route('/view_sheet/<sheet_name>')
 def view_sheet(sheet_name):
