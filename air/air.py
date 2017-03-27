@@ -51,5 +51,5 @@ def list(sheet_name):
     schema = models.Sheets_Schema.query.filter_by(sheet=sheet.id).first()
     return "{}".format(schema)
 
-#if __name__ == "__main__":
-#    app.run(debug=True)
+if __name__ == "__main__":
+    app.run(debug=True)
