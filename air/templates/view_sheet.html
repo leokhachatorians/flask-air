@@ -1,7 +1,16 @@
 {% extends "base.html" %}
 
 {% block content %}
+
 <h1>{{ sheet_name }}</h1>
+
+<h4>Add A Column</h4>
+<form method="POST">
+  {% for field in form %}
+    {{ field }}
+  {% endfor %}
+  <input type="submit">
+</form>
 
 <table style="width:100%">
   {% for i in schema %}

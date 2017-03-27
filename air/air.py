@@ -18,6 +18,7 @@ app.config.update(dict(
 app.config.from_envvar('AIR_SETTINGS', silent=True)
 
 db = SQLAlchemy(app)
+#engine = db.get_engine
 
 import models
 
@@ -43,15 +44,24 @@ def create_new_sheet():
             db.session.add(schema)
 
         db.session.commit()
-        helpers.generate_table(data)
+        helpers.generate_table(data, db)
         return redirect(url_for('create_new_sheet'))
     return render_template('create_new_sheet.html', form=form)
 
-@app.route('/view_sheet/<sheet_name>')
+@app.route('/view_sheet/<sheet_name>', methods=['GET', 'POST'])
 def view_sheet(sheet_name):
+    form = forms.AddColumnForm(request.form)
     sheet = models.Sheets.query.filter_by(sheet_name=sheet_name).first()
     schema = models.Sheets_Schema.query.filter_by(sheet_id=sheet.id).all()
-    return render_template('view_sheet.html', schema=schema)
+    if request.method == 'POST' and form.validate():
+        new_col = models.Sheets_Schema(
+                sheet, form.column_name.data,
+                form.column_type.data, schema[-1].column_num + 1)
+        db.session.add(new_col)
+        db.session.commit()
+        return redirect(url_for('view_sheet', sheet_name=sheet_name))
+    return render_template('view_sheet.html',
+            schema=schema, form=form, sheet_name=sheet_name)
 
 if __name__ == "__main__":
     app.run(debug=True)

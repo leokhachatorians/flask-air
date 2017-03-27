@@ -1,11 +1,9 @@
 import sqlalchemy
-from air import db
-from sqlalchemy.orm import mapper
+#from air import db
 import sqlalchemy.types as sa_Types
-from flask import current_app
 
-def generate_table(data):
-    metadata = sqlalchemy.MetaData(bind=db.get_engine)
+def generate_table(data, db):
+    metadata = sqlalchemy.MetaData(db.get_engine())
     names = [i for i in range(len(data['column_names']))]
     types = data['column_types']
 
@@ -14,7 +12,7 @@ def generate_table(data):
             sqlalchemy.Column('id', sqlalchemy.Integer, primary_key=True),
             *(sqlalchemy.Column('col_{}'.format(name),
                 getattr(sa_Types, _type)()) for (name, _type) in zip(names,types)))
-    table.create(db.get_engine())
+    table.create()
 
 def standardize_form_data(form):
     """
