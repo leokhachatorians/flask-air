@@ -2,8 +2,11 @@ import os
 import forms, helpers
 from flask import Flask, request, session, g, redirect, url_for, abort, \
         render_template, flash, current_app
+#from generated_table import GeneratedTable
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import sessionmaker, scoped_session
+from sqlalchemy.ext.automap import automap_base
+import sqlalchemy
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -93,6 +96,71 @@ def modify_sheet(sheet_name):
     return render_template('modify_sheet.html',
             schema=schema, add_form=add_form,
             delete_form=delete_form, sheet_name=sheet_name)
+
+@app.route('/test/<table_name>')
+def test(table_name):
+    Base = automap_base()
+
+    # reflect the tables
+    Base.prepare(db.get_engine(), reflect=True)
+    print(Base.classes)
+    classes = Base.classes
+    for c in classes:
+        print(c)
+    table = classes['{}'.format(table_name)]
+    print(dir(table))
+    sheet = session.query(models.Sheets).filter_by(sheet_name="test").first()
+    schema = session.query(models.Sheets_Schema).filter(models.Sheets_Schema.sheet_id==sheet.id)
+
+   # names = []
+   # types = []
+   # for i in schema:
+   #     names.append(i.column_name)
+   #     types.append(i.column_type)
+   # data = zip(names, types)
+
+   # for name, _type in zip(names, types):
+   #     print(name, _type)
+
+   # Base = automap_base()
+
+   # class GeneratedTable(Base):
+   #     __tablename__ = "{}".format(table_name)
+   #     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True)
+   #    # def __init__(self, data):
+   #    #     self.data = data
+
+   #    #     for name, _type in self.data:
+   #    #         setattr(self, name, (getattr(sqlalchemy.types,_type)()))
+   #             #setattr(self, __tablename__, "test")
+
+   # Base.prepare()
+   # t = GeneratedTable()
+   # #print(t.name)
+   # print(dir(t))
+
+
+
+
+
+
+
+    return "testing"
+
+    # mapped classes are now created with names by default
+    # matching that of the table name.
+   # User = Base.classes.user
+   # Address = Base.classes.address
+
+   # session = Session(engine)
+
+   # # rudimentary relationships are produced
+   # session.add(Address(email_address="foo@bar.com", user=User(name="foo")))
+   # session.commit()
+
+   # # collection-based relationships are by default named
+   # # "<classname>_collection"
+   # print (u1.address_collection)
 
 if __name__ == "__main__":
     app.run(debug=True)
