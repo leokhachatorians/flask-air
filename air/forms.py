@@ -28,5 +28,4 @@ class AddColumnForm(Form):
     submit_add_column = SubmitField('Add Column')
 
 class DeleteColumnForm(Form):
-    #delete = BooleanField("Delete", default=False)
     submit_delete_columns = SubmitField('Delete Columns')

@@ -64,20 +64,26 @@ def modify_sheet(sheet_name):
     delete_form = forms.DeleteColumnForm(request.form)
     sheet = s.query(models.Sheets).filter_by(sheet_name=sheet_name).first()
     schema = s.query(models.Sheets_Schema).filter(models.Sheets_Schema.sheet_id==sheet.id)
+
     if request.method == 'POST':
         if add_form.submit_add_column.data and add_form.validate():
             new_col = models.Sheets_Schema(
-                    sheet, form.column_name.data,
-                    form.column_type.data, schema[-1].column_num + 1)
+                    sheet, add_form.column_name.data,
+                    add_form.column_type.data, schema[-1].column_num + 1)
             s.add(new_col)
             s.commit()
-            return redirect(url_for('view_sheet', sheet_name=sheet_name))
+
         elif delete_form.submit_delete_columns.data and delete_form.validate():
             cols_to_delete = request.form.getlist("to_delete")
             for name in cols_to_delete:
                 col_to_delete = s.query(models.Sheets_Schema).filter(models.Sheets_Schema.column_name==name).delete()
+
+            leftover_columns = s.query(models.Sheets_Schema).filter(models.Sheets_Schema.sheet_id==sheet.id).all()
+            for i, col in enumerate(leftover_columns):
+                col.column_num = i
             s.commit()
-            return redirect(url_for('view_sheet', sheet_name=sheet_name))
+
+        return redirect(url_for('view_sheet', sheet_name=sheet_name))
     return render_template('modify_sheet.html',
             schema=schema, add_form=add_form,
             delete_form=delete_form, sheet_name=sheet_name)
