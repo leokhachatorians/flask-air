@@ -52,7 +52,20 @@ def standardize_form_data(form):
     return data
 
 def user_adds_column(form, sheet, schema):
+    """
+    Unused until I can figure out why it works half the time...
+    """
     new_col = models.Sheets_Schema(
             sheet, form.column_name.data,
             form.column_type.data, schema[-1].column_num + 1)
     session.add(new_col)
+
+def user_removes_columns(sheet, schema, request):
+        cols_to_delete = request.form.getlist("to_delete")
+        for name in cols_to_delete:
+            col_to_delete = session.query(models.Sheets_Schema).filter(models.Sheets_Schema.column_name==name).delete()
+
+        leftover_columns = session.query(models.Sheets_Schema).filter(models.Sheets_Schema.sheet_id==sheet.id).all()
+        for i, col in enumerate(leftover_columns):
+            col.column_num = i
+        session.commit()

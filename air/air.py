@@ -87,14 +87,7 @@ def modify_sheet(sheet_name):
             session.commit()
 
         elif delete_form.submit_delete_columns.data and delete_form.validate():
-            cols_to_delete = request.form.getlist("to_delete")
-            for name in cols_to_delete:
-                col_to_delete = s.query(models.Sheets_Schema).filter(models.Sheets_Schema.column_name==name).delete()
-
-            leftover_columns = s.query(models.Sheets_Schema).filter(models.Sheets_Schema.sheet_id==sheet.id).all()
-            for i, col in enumerate(leftover_columns):
-                col.column_num = i
-            session.commit()
+            helpers.user_removes_columns(sheet, schema, request)
 
         return redirect(url_for('view_sheet', sheet_name=sheet_name))
     return render_template('modify_sheet.html',
