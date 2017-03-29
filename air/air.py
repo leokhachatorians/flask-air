@@ -51,8 +51,15 @@ def create_new_sheet():
         return redirect(url_for('create_new_sheet'))
     return render_template('create_new_sheet.html', form=form)
 
-@app.route('/view_sheet/<sheet_name>', methods=['GET', 'POST'])
+@app.route('/view_sheet/<sheet_name>')
 def view_sheet(sheet_name):
+    sheet = s.query(models.Sheets).filter_by(sheet_name=sheet_name).first()
+    schema = s.query(models.Sheets_Schema).filter(models.Sheets_Schema.sheet_id==sheet.id)
+    return render_template('view_sheet.html',
+            schema=schema, sheet_name=sheet_name)
+
+@app.route('/modify_sheet/<sheet_name>', methods=['GET', 'POST'])
+def modify_sheet(sheet_name):
     form = forms.AddColumnForm(request.form)
     sheet = s.query(models.Sheets).filter_by(sheet_name=sheet_name).first()
     schema = s.query(models.Sheets_Schema).filter(models.Sheets_Schema.sheet_id==sheet.id)
@@ -63,8 +70,9 @@ def view_sheet(sheet_name):
         s.add(new_col)
         s.commit()
         return redirect(url_for('view_sheet', sheet_name=sheet_name))
-    return render_template('view_sheet.html',
-            schema=schema, form=form, sheet_name=sheet_name)
+    return render_template('modify_sheet.html',
+            schema=schema, form=form,
+            sheet_name=sheet_name)
 
 if __name__ == "__main__":
     app.run(debug=True)
