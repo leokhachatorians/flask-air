@@ -1,6 +1,8 @@
 import sqlalchemy
-#from air import db
 import sqlalchemy.types as sa_Types
+import models
+from air import session
+from wrappers import attempt_db_modification
 
 def generate_table(data, db):
     metadata = sqlalchemy.MetaData(db.get_engine())
@@ -48,3 +50,9 @@ def standardize_form_data(form):
     }
 
     return data
+
+def user_adds_column(form, sheet, schema):
+    new_col = models.Sheets_Schema(
+            sheet, form.column_name.data,
+            form.column_type.data, schema[-1].column_num + 1)
+    session.add(new_col)

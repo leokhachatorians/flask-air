@@ -20,7 +20,7 @@ app.config.from_envvar('AIR_SETTINGS', silent=True)
 
 db = SQLAlchemy(app)
 Session = sessionmaker(bind=db.get_engine())
-s = scoped_session(Session)
+session = scoped_session(Session)
 #engine = db.get_engine
 
 import models
@@ -33,45 +33,58 @@ def index():
 
 @app.route('/create_new_sheet', methods=['GET', 'POST'])
 def create_new_sheet():
+    """
+    View to handle user creation of new "Sheets".
+
+    Data is standardized prior to it being read for table
+    generation.
+    """
     form = forms.NewSheetForm(request.form)
     if request.method == 'POST' and form.validate():
         sheet = models.Sheets(1, form.sheet_name.data)
-        s.add(sheet)
-        s.commit()
+        session.add(sheet)
+        session.commit()
 
         data = helpers.standardize_form_data(form)
         data['s_ID'] = sheet.id
 
         for i, (c_name, c_type) in enumerate(zip(data['column_names'], data['column_types'])):
             schema = models.Sheets_Schema(sheet, c_name, c_type, i)
-            s.add(schema)
+            session.add(schema)
 
-        s.commit()
+        session.commit()
         helpers.generate_table(data, db)
         return redirect(url_for('create_new_sheet'))
     return render_template('create_new_sheet.html', form=form)
 
 @app.route('/view_sheet/<sheet_name>')
 def view_sheet(sheet_name):
-    sheet = s.query(models.Sheets).filter_by(sheet_name=sheet_name).first()
-    schema = s.query(models.Sheets_Schema).filter(models.Sheets_Schema.sheet_id==sheet.id)
+    sheet = session.query(models.Sheets).filter_by(sheet_name=sheet_name).first()
+    schema = session.query(models.Sheets_Schema).filter(models.Sheets_Schema.sheet_id==sheet.id)
     return render_template('view_sheet.html',
             schema=schema, sheet_name=sheet_name)
 
 @app.route('/modify_sheet/<sheet_name>', methods=['GET', 'POST'])
 def modify_sheet(sheet_name):
+    """
+    View which allows the user to modify the open "Sheet".
+
+    Two seperate forms exist, one for adding columns and the other
+    for deletion. As such, there exists two blocks which handle
+    each respective action.
+    """
     add_form = forms.AddColumnForm(request.form)
     delete_form = forms.DeleteColumnForm(request.form)
-    sheet = s.query(models.Sheets).filter_by(sheet_name=sheet_name).first()
-    schema = s.query(models.Sheets_Schema).filter(models.Sheets_Schema.sheet_id==sheet.id)
+    sheet = session.query(models.Sheets).filter_by(sheet_name=sheet_name).first()
+    schema = session.query(models.Sheets_Schema).filter(models.Sheets_Schema.sheet_id==sheet.id)
 
     if request.method == 'POST':
         if add_form.submit_add_column.data and add_form.validate():
             new_col = models.Sheets_Schema(
                     sheet, add_form.column_name.data,
                     add_form.column_type.data, schema[-1].column_num + 1)
-            s.add(new_col)
-            s.commit()
+            session.add(new_col)
+            session.commit()
 
         elif delete_form.submit_delete_columns.data and delete_form.validate():
             cols_to_delete = request.form.getlist("to_delete")
@@ -81,7 +94,7 @@ def modify_sheet(sheet_name):
             leftover_columns = s.query(models.Sheets_Schema).filter(models.Sheets_Schema.sheet_id==sheet.id).all()
             for i, col in enumerate(leftover_columns):
                 col.column_num = i
-            s.commit()
+            session.commit()
 
         return redirect(url_for('view_sheet', sheet_name=sheet_name))
     return render_template('modify_sheet.html',
