@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Modify {{ sheet_name }}</h1>
+
+<h4>Add A Column</h4>
+<form method="POST">
+  {% for field in add_form %}
+    {{ field }}
+  {% endfor %}
+</form>
+
+</br></br>
+
+<h4>Delete a Column</h4>
+<form method="POST">
+  <table class='table table-bordered' style="width:100%">
+    <tr>
+      <th>Column Name</th>
+      <th>Column Type</th>
+    </tr>
+    <tbody>
+      {% for i in schema %}
+      <tr>
+        <td>{{ i.column_name }}</td>
+        <td>{{ i.column_type }}</td>
+        <td>
+          <input type="checkbox" id="cb_{{ loop.index0 }}"
+               name="to_delete" value="{{ i.column_name }}">
+          Delete Column
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{{ delete_form.submit_delete_columns }}
+</form>
+
+{% endblock %}
