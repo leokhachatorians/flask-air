@@ -64,13 +64,19 @@ def modify_sheet(sheet_name):
     delete_form = forms.DeleteColumnForm(request.form)
     sheet = s.query(models.Sheets).filter_by(sheet_name=sheet_name).first()
     schema = s.query(models.Sheets_Schema).filter(models.Sheets_Schema.sheet_id==sheet.id)
-    if request.method == 'POST' and form.validate():
-        new_col = models.Sheets_Schema(
-                sheet, form.column_name.data,
-                form.column_type.data, schema[-1].column_num + 1)
-        s.add(new_col)
-        s.commit()
-        return redirect(url_for('view_sheet', sheet_name=sheet_name))
+    if request.method == 'POST':
+        if add_form.submit_add_column.data and add_form.validate():
+            new_col = models.Sheets_Schema(
+                    sheet, form.column_name.data,
+                    form.column_type.data, schema[-1].column_num + 1)
+            s.add(new_col)
+            s.commit()
+            return redirect(url_for('view_sheet', sheet_name=sheet_name))
+        elif delete_form.submit_delete_columns.data and delete_form.validate():
+            print("delete form")
+            for i in delete_form:
+                print(i)
+            return redirect(url_for('view_sheet', sheet_name=sheet_name))
     return render_template('modify_sheet.html',
             schema=schema, add_form=add_form,
             delete_form=delete_form, sheet_name=sheet_name)
