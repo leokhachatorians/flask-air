@@ -73,9 +73,10 @@ def modify_sheet(sheet_name):
             s.commit()
             return redirect(url_for('view_sheet', sheet_name=sheet_name))
         elif delete_form.submit_delete_columns.data and delete_form.validate():
-            print("delete form")
-            for i in delete_form:
-                print(i)
+            cols_to_delete = request.form.getlist("to_delete")
+            for name in cols_to_delete:
+                col_to_delete = s.query(models.Sheets_Schema).filter(models.Sheets_Schema.column_name==name).delete()
+            s.commit()
             return redirect(url_for('view_sheet', sheet_name=sheet_name))
     return render_template('modify_sheet.html',
             schema=schema, add_form=add_form,
