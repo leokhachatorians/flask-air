@@ -60,7 +60,8 @@ def view_sheet(sheet_name):
 
 @app.route('/modify_sheet/<sheet_name>', methods=['GET', 'POST'])
 def modify_sheet(sheet_name):
-    form = forms.AddColumnForm(request.form)
+    add_form = forms.AddColumnForm(request.form)
+    delete_form = forms.DeleteColumnForm(request.form)
     sheet = s.query(models.Sheets).filter_by(sheet_name=sheet_name).first()
     schema = s.query(models.Sheets_Schema).filter(models.Sheets_Schema.sheet_id==sheet.id)
     if request.method == 'POST' and form.validate():
@@ -71,8 +72,8 @@ def modify_sheet(sheet_name):
         s.commit()
         return redirect(url_for('view_sheet', sheet_name=sheet_name))
     return render_template('modify_sheet.html',
-            schema=schema, form=form,
-            sheet_name=sheet_name)
+            schema=schema, add_form=add_form,
+            delete_form=delete_form, sheet_name=sheet_name)
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -1,4 +1,10 @@
-from wtforms import Form, BooleanField, StringField, PasswordField, validators
+from wtforms import (
+        Form, BooleanField, StringField, PasswordField, validators,
+        SubmitField,
+)
+
+import wtforms
+
 
 class NewSheetForm(Form):
     sheet_name = StringField('Sheet Name',
@@ -18,4 +24,8 @@ class AddColumnForm(Form):
     column_type = StringField('Column Type',
             [validators.Length(min=3, max=25), validators.DataRequired()],
             render_kw={"placeholder": "Text"})
+    submit_add_column = SubmitField('Add Column')
 
+class DeleteColumnForm(Form):
+    delete = BooleanField("Delete", default=False)
+    submit_delete_columns = SubmitField('Delete Columns')
