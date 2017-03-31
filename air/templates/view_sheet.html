@@ -9,9 +9,22 @@
   </a>
 </h3>
 
+<form method="POST">
+  {% for i in schema %}
+    <input type="text" name="add_records" placeholder="{{ i.column_name }}" value="">
+  {% endfor %}
+  <input type="submit" value="Add">
+</form>
 <table class='table table-bordered' style="width:100%">
   {% for i in schema %}
   <th>{{ i.column_name }}</th>
   {% endfor %}
+  <tbody>
+    {% for i in contents %}
+    <tr>
+      <td> {{ i }} </td>
+    </tr>
+    {% endfor %}
+  </tbody>
 </table>
 {% endblock %}
