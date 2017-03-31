@@ -109,61 +109,11 @@ def modify_sheet(sheet_name):
             #command = helpers.generate_alter_table_sql('add_col', data)
         elif delete_form.submit_delete_columns.data and delete_form.validate():
             helpers.user_removes_columns(sheet, schema, request)
-            #print(data)
 
         return redirect(url_for('modify_sheet', sheet_name=sheet_name))
     return render_template('modify_sheet.html',
             schema=schema, add_form=add_form,
             delete_form=delete_form, sheet_name=sheet_name)
-
-@app.route('/test/<table_name>')
-def test(table_name):
-    Base = automap_base()
-
-    # reflect the tables
-    Base.prepare(db.get_engine(), reflect=True)
-    print(Base.classes)
-    classes = Base.classes
-    for c in classes:
-        print(c)
-    table = classes['{}'.format(table_name)]
-    print(dir(table))
-    print(dir(table.col_0))
-    sheet = session.query(models.Sheets).filter_by(sheet_name="test").first()
-    schema = session.query(models.Sheets_Schema).filter(models.Sheets_Schema.sheet_id==sheet.id)
-    session.add(table(col_0=23))
-    session.commit()
-
-
-   # names = []
-   # types = []
-   # for i in schema:
-   #     names.append(i.column_name)
-   #     types.append(i.column_type)
-   # data = zip(names, types)
-
-   # for name, _type in zip(names, types):
-   #     print(name, _type)
-
-   # Base = automap_base()
-
-   # class GeneratedTable(Base):
-   #     __tablename__ = "{}".format(table_name)
-   #     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True)
-   #    # def __init__(self, data):
-   #    #     self.data = data
-
-   #    #     for name, _type in self.data:
-   #    #         setattr(self, name, (getattr(sqlalchemy.types,_type)()))
-   #             #setattr(self, __tablename__, "test")
-
-   # Base.prepare()
-   # t = GeneratedTable()
-   # #print(t.name)
-   # print(dir(t))
-
-
-    return "testing"
 
 if __name__ == "__main__":
     app.run(debug=True)
