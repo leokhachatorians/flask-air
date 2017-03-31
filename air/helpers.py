@@ -73,3 +73,12 @@ def user_removes_columns(sheet, schema, request):
         for i, col in enumerate(leftover_columns):
             col.column_num = i
         session.commit()
+
+def format_user_data(data):
+    content = []
+    for chunk in data:
+        rows = []
+        for i in chunk[1:]:
+            rows.append(i)
+        content.append(rows)
+    return content

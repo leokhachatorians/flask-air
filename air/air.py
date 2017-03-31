@@ -82,6 +82,7 @@ def view_sheet(sheet_name):
         return redirect(url_for('view_sheet', sheet_name=sheet_name))
 
     contents = session.query(generated_table).all()
+    contents = helpers.format_user_data(contents)
 
     return render_template('view_sheet.html',
             schema=schema, sheet_name=sheet_name,

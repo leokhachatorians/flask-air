@@ -22,7 +22,9 @@
   <tbody>
     {% for i in contents %}
     <tr>
-      <td> {{ i }} </td>
+      {% for j in i %}
+        <td> {{ j }} </td>
+      {% endfor %}
     </tr>
     {% endfor %}
   </tbody>
