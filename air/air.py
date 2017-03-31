@@ -23,7 +23,8 @@ app.config.from_envvar('AIR_SETTINGS', silent=True)
 
 db = SQLAlchemy(app)
 Session = sessionmaker(bind=db.get_engine())
-session = scoped_session(Session)
+#session = scoped_session(Session)
+session = Session()
 #engine = db.get_engine
 
 import models
@@ -83,19 +84,7 @@ def modify_sheet(sheet_name):
 
     if request.method == 'POST':
         if add_form.submit_add_column.data and add_form.validate():
-            new_col = models.Sheets_Schema(
-                    sheet, add_form.column_name.data,
-                    add_form.column_type.data, schema[-1].column_num + 1)
-            session.add(new_col)
-            session.commit()
-
-            data = {
-                'table_name': 'table_{}'.format(new_col.sheet_id),
-                'new_col': {
-                    'name': 'col_{}'.format(new_col.column_num),
-                    'type': new_col.column_type
-                }
-            }
+            data = helpers.user_adds_column_workflow(add_form, sheet, schema)
             command = helpers.alter_table_flow('add_col', data)
 
 

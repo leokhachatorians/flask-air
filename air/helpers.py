@@ -51,14 +51,21 @@ def standardize_form_data(form):
 
     return data
 
-def user_adds_column(form, sheet, schema):
-    """
-    Unused until I can figure out why it works half the time...
-    """
-    new_col = models.Sheets_Schema(
-            sheet, form.column_name.data,
-            form.column_type.data, schema[-1].column_num + 1)
-    session.add(new_col)
+def generate_table_alteration_data(**kwargs):
+    data = {
+        'table_name': "table_{}".format(kwargs['table_id'])
+    }
+
+    if kwargs['new_col']:
+        data['new_col'] = {}
+        data['new_col']['name'] = "col_{}".format(
+                kwargs['col_num'])
+        data['new_col']['type'] = kwargs['col_type']
+
+    elif kwargs['delete_cols']:
+        pass
+
+    return data
 
 def alter_table_flow(action, data):
     """
@@ -80,18 +87,18 @@ def alter_table_flow(action, data):
     }
     """
     if action == 'add_col':
-        command = "ALTER TABLE {} ADD COLUMN {} {}".format(
+        command = "ALTER TABLE {} ADD COLUMN {} {};".format(
                 data['table_name'],
                 data['new_col']['name'],
                 data['new_col']['type'])
 
     elif action == 'remove_col':
-        command = "ALTER TABLE {} DROP COLUMN {}".format(
+        command = "ALTER TABLE {} DROP COLUMN {};".format(
                 data['table_name'],
                 data['remove_col'])
 
     elif action == 'rename_col':
-        command = "ALTER TABLE {} RENAME COLUMN {} TO {}".format(
+        command = "ALTER TABLE {} RENAME COLUMN {} TO {};".format(
                 data['table_name'],
                 data['rename_col']['old_name'],
                 data['rename_col']['new_name'])
@@ -101,6 +108,23 @@ def alter_table_flow(action, data):
     elif action == 'change_col_type':
         pass
     return command
+
+def user_adds_column_workflow(form, sheet, schema):
+    new_col = models.Sheets_Schema(
+            sheet, form.column_name.data,
+            form.column_type.data, schema[-1].column_num + 1)
+
+    current_session = session.object_session(new_col)
+    current_session.add(new_col)
+    current_session.commit()
+
+    data = generate_table_alteration_data(
+            table_id=new_col.id,
+            new_col=True,
+            col_num=new_col.column_num,
+            col_type=new_col.column_type)
+
+    return data
 
 def user_removes_columns(sheet, schema, request):
         cols_to_delete = request.form.getlist("to_delete")
