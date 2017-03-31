@@ -89,6 +89,16 @@ def modify_sheet(sheet_name):
             session.add(new_col)
             session.commit()
 
+            data = {
+                'table_name': 'table_{}'.format(new_col.sheet_id),
+                'new_col': {
+                    'name': 'col_{}'.format(new_col.column_num),
+                    'type': new_col.column_type
+                }
+            }
+            command = helpers.alter_table_flow('add_col', data)
+
+
         elif delete_form.submit_delete_columns.data and delete_form.validate():
             helpers.user_removes_columns(sheet, schema, request)
 
@@ -109,8 +119,12 @@ def test(table_name):
         print(c)
     table = classes['{}'.format(table_name)]
     print(dir(table))
+    print(dir(table.col_0))
     sheet = session.query(models.Sheets).filter_by(sheet_name="test").first()
     schema = session.query(models.Sheets_Schema).filter(models.Sheets_Schema.sheet_id==sheet.id)
+    session.add(table(col_0=23))
+    session.commit()
+
 
    # names = []
    # types = []
@@ -140,27 +154,7 @@ def test(table_name):
    # print(dir(t))
 
 
-
-
-
-
-
     return "testing"
-
-    # mapped classes are now created with names by default
-    # matching that of the table name.
-   # User = Base.classes.user
-   # Address = Base.classes.address
-
-   # session = Session(engine)
-
-   # # rudimentary relationships are produced
-   # session.add(Address(email_address="foo@bar.com", user=User(name="foo")))
-   # session.commit()
-
-   # # collection-based relationships are by default named
-   # # "<classname>_collection"
-   # print (u1.address_collection)
 
 if __name__ == "__main__":
     app.run(debug=True)

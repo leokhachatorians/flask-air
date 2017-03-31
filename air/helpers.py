@@ -60,6 +60,48 @@ def user_adds_column(form, sheet, schema):
             form.column_type.data, schema[-1].column_num + 1)
     session.add(new_col)
 
+def alter_table_flow(action, data):
+    """
+    data = {
+        'table_name': sheet_name,
+        'new_col': {
+            'name': name,
+            'type': type
+        }
+        'remove_col': name,
+        'rename_col': {
+            'old_name': old_name,
+            'new_name': new_name,
+        }
+        'rename_table': {
+            'table': table_object,
+            'new_table_name': new_table_name
+        }
+    }
+    """
+    if action == 'add_col':
+        command = "ALTER TABLE {} ADD COLUMN {} {}".format(
+                data['table_name'],
+                data['new_col']['name'],
+                data['new_col']['type'])
+
+    elif action == 'remove_col':
+        command = "ALTER TABLE {} DROP COLUMN {}".format(
+                data['table_name'],
+                data['remove_col'])
+
+    elif action == 'rename_col':
+        command = "ALTER TABLE {} RENAME COLUMN {} TO {}".format(
+                data['table_name'],
+                data['rename_col']['old_name'],
+                data['rename_col']['new_name'])
+
+    elif action == 'rename_table':
+        pass
+    elif action == 'change_col_type':
+        pass
+    return command
+
 def user_removes_columns(sheet, schema, request):
         cols_to_delete = request.form.getlist("to_delete")
         for name in cols_to_delete:
