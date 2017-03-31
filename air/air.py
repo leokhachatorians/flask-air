@@ -84,12 +84,12 @@ def modify_sheet(sheet_name):
 
     if request.method == 'POST':
         if add_form.submit_add_column.data and add_form.validate():
-            new_col = helpers.user_adds_column(add_form, sheet, schema)
-            data = helpers.structure_alter_table_data('add_col', new_col)
-            command = helpers.generate_alter_table_sql('add_col', data)
+            helpers.user_adds_column(add_form, sheet, schema)
+            #data = helpers.structure_alter_table_data('add_col', new_col)
+            #command = helpers.generate_alter_table_sql('add_col', data)
         elif delete_form.submit_delete_columns.data and delete_form.validate():
-            data = helpers.user_removes_columns(sheet, schema, request)
-            print(data)
+            helpers.user_removes_columns(sheet, schema, request)
+            #print(data)
 
         return redirect(url_for('view_sheet', sheet_name=sheet_name))
     return render_template('modify_sheet.html',

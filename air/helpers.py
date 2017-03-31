@@ -52,7 +52,7 @@ def standardize_form_data(form):
 
     return data
 
-def structure_alter_table_data(action, obj):
+def structure_alter_table_data(action, obj, **kwargs):
     """
     Given a DB object, create and structure data
     which will then be used to generate the SQL
@@ -71,6 +71,16 @@ def structure_alter_table_data(action, obj):
             'table_name': "table_{}".format(obj.sheet_id),
             'remove_col': "col_{}".format(obj.column_num)
         }
+
+    elif action == 'rename_col':
+        data = {
+            'table_name': "table_{}".format(obj.sheet_id),
+            'rename_col': {
+                'old_name': "col_{}".format(obj.column_num),
+                'new_name': "col_{}".format(kwargs['new_col_num'])
+            }
+        }
+
 
     return data
 
@@ -124,23 +134,28 @@ def user_adds_column(form, sheet, schema):
     current_session = session.object_session(new_col)
     current_session.add(new_col)
     current_session.commit()
-    return new_col
+    #return new_col
 
 def user_removes_columns(sheet, schema, request):
         cols_to_delete = request.form.getlist("to_delete")
-        deleted_col_commands = []
+        commands = []
         for name in cols_to_delete:
             col_to_delete = session.query(models.Sheets_Schema).filter(and_(
                 models.Sheets_Schema.column_name==name,
-                models.Sheets_Schema.sheet_id==sheet.id)).first()
-            data = structure_alter_table_data('remove_col', col_to_delete)
-            deleted_col_commands.append(generate_alter_table_sql(
-                "remove_col", data))
-            session.delete(col_to_delete)
+                models.Sheets_Schema.sheet_id==sheet.id)).delete()
+          #  data = structure_alter_table_data('remove_col', col_to_delete)
+          #  commands.append(generate_alter_table_sql(
+          #      "remove_col", data))
+          #  session.delete(col_to_delete)
 
         leftover_columns = session.query(models.Sheets_Schema).filter(models.Sheets_Schema.sheet_id==sheet.id).all()
         for i, col in enumerate(leftover_columns):
+
             col.column_num = i
+            #data = structure_alter_table_data(
+            #    'rename_col', col, new_col_num=col.column_num - num_dropped)
+            #commands.append(generate_alter_table_sql(
+            #    "rename_col", data))
         session.commit()
 
-        return deleted_col_commands
+    #    return commands
