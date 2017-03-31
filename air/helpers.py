@@ -2,6 +2,7 @@ import sqlalchemy
 import sqlalchemy.types as sa_Types
 import models
 from air import session
+from sqlalchemy import and_
 from wrappers import attempt_db_modification
 
 def generate_table(data, db):
@@ -51,23 +52,29 @@ def standardize_form_data(form):
 
     return data
 
-def generate_table_alteration_data(**kwargs):
-    data = {
-        'table_name': "table_{}".format(kwargs['table_id'])
-    }
-
-    if kwargs['new_col']:
-        data['new_col'] = {}
-        data['new_col']['name'] = "col_{}".format(
-                kwargs['col_num'])
-        data['new_col']['type'] = kwargs['col_type']
-
-    elif kwargs['delete_cols']:
-        pass
+def structure_alter_table_data(action, obj):
+    """
+    Given a DB object, create and structure data
+    which will then be used to generate the SQL
+    commands for alter the user's table.
+    """
+    if action == 'add_col':
+        data = {
+            'table_name': "table_{}".format(obj.id),
+             'new_col': {
+                'name': "col_{}".format(obj.column_num),
+                'type': obj.column_type
+            }
+        }
+    elif action == 'remove_col':
+        data = {
+            'table_name': "table_{}".format(obj.sheet_id),
+            'remove_col': "col_{}".format(obj.column_num)
+        }
 
     return data
 
-def alter_table_flow(action, data):
+def generate_alter_table_sql(action, data):
     """
     data = {
         'table_name': sheet_name,
@@ -109,7 +116,7 @@ def alter_table_flow(action, data):
         pass
     return command
 
-def user_adds_column_workflow(form, sheet, schema):
+def user_adds_column(form, sheet, schema):
     new_col = models.Sheets_Schema(
             sheet, form.column_name.data,
             form.column_type.data, schema[-1].column_num + 1)
@@ -117,21 +124,23 @@ def user_adds_column_workflow(form, sheet, schema):
     current_session = session.object_session(new_col)
     current_session.add(new_col)
     current_session.commit()
-
-    data = generate_table_alteration_data(
-            table_id=new_col.id,
-            new_col=True,
-            col_num=new_col.column_num,
-            col_type=new_col.column_type)
-
-    return data
+    return new_col
 
 def user_removes_columns(sheet, schema, request):
         cols_to_delete = request.form.getlist("to_delete")
+        deleted_col_commands = []
         for name in cols_to_delete:
-            col_to_delete = session.query(models.Sheets_Schema).filter(models.Sheets_Schema.column_name==name).delete()
+            col_to_delete = session.query(models.Sheets_Schema).filter(and_(
+                models.Sheets_Schema.column_name==name,
+                models.Sheets_Schema.sheet_id==sheet.id)).first()
+            data = structure_alter_table_data('remove_col', col_to_delete)
+            deleted_col_commands.append(generate_alter_table_sql(
+                "remove_col", data))
+            session.delete(col_to_delete)
 
         leftover_columns = session.query(models.Sheets_Schema).filter(models.Sheets_Schema.sheet_id==sheet.id).all()
         for i, col in enumerate(leftover_columns):
             col.column_num = i
         session.commit()
+
+        return deleted_col_commands
