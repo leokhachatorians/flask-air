@@ -1,7 +1,8 @@
 import os
-import forms, helpers
-from flask import Flask, request, session, g, redirect, url_for, abort, \
+from flask import (
+        Flask, request, session, g, redirect, url_for, abort,
         render_template, flash, current_app
+)
 #from generated_table import GeneratedTable
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import sessionmaker, scoped_session
@@ -13,7 +14,7 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 
 app.config.update(dict(
-    SQLALCHEMY_DATABASE_URI="postgresql://leo:{}@localhost:5432/flask_air".format(os.environ['my_password']),
+    SQLALCHEMY_DATABASE_URI="postgresql://leo:password@localhost:5432/flask_air",
     SQLALCHEMY_TRACK_MODIFICATIONS=False,
     SECRET_KEY='blahlbahblah',
     USERNAME='admin',
@@ -29,7 +30,11 @@ Session = sessionmaker(bind=db.get_engine())
 session = Session()
 #engine = db.get_engine
 
-import models
+try:
+    import forms, helpers
+    import models
+except:
+    pass
 
 @app.route('/')
 def index():
@@ -60,7 +65,7 @@ def create_new_sheet():
 
         session.commit()
         helpers.generate_table(data, db)
-        return redirect(url_for('create_new_sheet'))
+        return redirect(url_for('index'))
     return render_template('create_new_sheet.html', form=form)
 
 @app.route('/view_sheet/<sheet_name>', methods=['GET', 'POST'])
