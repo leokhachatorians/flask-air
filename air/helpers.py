@@ -74,10 +74,22 @@ def user_adds_column(form, sheet, schema):
 def user_removes_columns(sheet, schema, request):
         cols_to_delete = request.form.getlist("to_delete")
         commands = []
+        table = sqlalchemy.Table("table_{}".format(sheet.id),
+                metadata)
         for name in cols_to_delete:
             col_to_delete = session.query(models.Sheets_Schema).filter(and_(
                 models.Sheets_Schema.column_name==name,
-                models.Sheets_Schema.sheet_id==sheet.id)).delete()
+                models.Sheets_Schema.sheet_id==sheet.id)).one()
+            col = sqlalchemy.Column("col_{}".format(col_to_delete.column_num))
+            session.delete(col_to_delete)
+            col.drop(table)
+           # col_to_delete = session.query(models.Sheets_Schema).filter(and_(
+           #     models.Sheets_Schema.column_name==name,
+           #     models.Sheets_Schema.sheet_id==sheet.id)).delete()
+            #col_to_delete[0].drop(table)
+            #col_to_delete[0].delete()
+            #col_to_delete.drop(
+
 
         leftover_columns = session.query(models.Sheets_Schema).filter(models.Sheets_Schema.sheet_id==sheet.id).all()
         for i, col in enumerate(leftover_columns):

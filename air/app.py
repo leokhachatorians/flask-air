@@ -110,8 +110,6 @@ def modify_sheet(sheet_name):
     if request.method == 'POST':
         if add_form.submit_add_column.data and add_form.validate():
             helpers.user_adds_column(add_form, sheet, schema)
-            #data = helpers.structure_alter_table_data('add_col', new_col)
-            #command = helpers.generate_alter_table_sql('add_col', data)
         elif delete_form.submit_delete_columns.data and delete_form.validate():
             helpers.user_removes_columns(sheet, schema, request)
 
