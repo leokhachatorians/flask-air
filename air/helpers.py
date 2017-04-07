@@ -97,19 +97,28 @@ def user_removes_columns(sheet, schema, request):
     the name of the column num. We can then delete the entry in sheets_schema
     and then have sqlalchemy-migrate drop the column via our "housing" table.
     """
-        cols_to_delete = request.form.getlist("to_delete")
-        table = sqlalchemy.Table("table_{}".format(sheet.id),
-                metadata)
-        for name in cols_to_delete:
-            col_to_delete = session.query(models.Sheets_Schema).filter(and_(
-                models.Sheets_Schema.column_name==name,
-                models.Sheets_Schema.sheet_id==sheet.id)).one()
-            col = sqlalchemy.Column("col_{}".format(col_to_delete.column_num))
-            session.delete(col_to_delete)
-            col.drop(table)
+    cols_to_delete = request.form.getlist("to_delete")
+    generated_table = sqlalchemy.Table("table_{}".format(sheet.id),
+            metadata)
+    for name in cols_to_delete:
+        col_to_delete = session.query(models.Sheets_Schema).filter(and_(
+            models.Sheets_Schema.column_name==name,
+            models.Sheets_Schema.sheet_id==sheet.id)).one()
+        col = sqlalchemy.Column("col_{}".format(col_to_delete.column_num))
+        session.delete(col_to_delete)
+        session.commit()
+        col.drop(generated_table)
 
         leftover_columns = session.query(models.Sheets_Schema).filter(models.Sheets_Schema.sheet_id==sheet.id).all()
         for i, col in enumerate(leftover_columns):
+            #print(dir(generated_table))
+            test = getattr(generated_table.c, 'col_{}'.format(leftover_columns[i].column_num))
+            print(test)
+            print(dir(test))
+            #test.alter(name='col_{}'.format(i))
+            ##generated_table.c.
+            ##left_col..alter(name="col_{}".format(i))
+            ##left_col.column_num = i
             col.column_num = i
         session.commit()
 
