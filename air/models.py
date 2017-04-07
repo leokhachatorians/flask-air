@@ -1,9 +1,22 @@
-from air import db, app
+import sqlalchemy
+from sqlalchemy import (
+        Column, Integer, String, ForeignKey,
+)
 
-class User(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True)
-    email = db.Column(db.String(120), unique=True)
+from sqlalchemy.orm import (
+        mapper, relationship, backref
+)
+from sqlalchemy.ext.declarative import declarative_base
+
+
+Base = declarative_base()
+
+#class User(Model):
+class User(Base):
+    __tablename__ = 'users'
+    id = Column(Integer, primary_key=True)
+    username = Column(String(80), unique=True)
+    email = Column(String(120), unique=True)
 
     def __init__(self, username, email):
         self.username = username
@@ -12,11 +25,12 @@ class User(db.Model):
     def __repr__(self):
         return "<User {}>".format(self.username)
 
-class Sheets(db.Model):
+#class Sheets(Model):
+class Sheets(Base):
     __tablename__ = 'sheets'
-    id = db.Column(db.Integer, primary_key=True)
-    user_id =  db.Column(db.Integer)
-    sheet_name = db.Column(db.String(180), unique=True)
+    id = Column(Integer, primary_key=True)
+    user_id =  Column(Integer)
+    sheet_name = Column(String(180), unique=True)
 
     def __init__(self, user_id, sheet_name):
         self.user_id = user_id
@@ -27,15 +41,16 @@ class Sheets(db.Model):
                 self.user_id,
                 self.sheet_name)
 
-class Sheets_Schema(db.Model):
-    __name__ = 'sheets_schema'
-    id = db.Column(db.Integer, primary_key=True)
-    sheet_id = db.Column(db.Integer, db.ForeignKey("sheets.id"))
-    sheet = db.relationship('Sheets',
-            backref=db.backref('sheets_scehma', lazy='dynamic'))
-    column_name = db.Column(db.String(150), unique=True)
-    column_type = db.Column(db.String(80))
-    column_num = db.Column(db.Integer)
+#class Sheets_Schema(Model):
+class Sheets_Schema(Base):
+    __tablename__ = 'sheets_schema'
+    id = Column(Integer, primary_key=True)
+    sheet_id = Column(Integer, ForeignKey("sheets.id"))
+    sheet = relationship('Sheets',
+            backref=backref('sheets_scehma', lazy='dynamic'))
+    column_name = Column(String(150), unique=True)
+    column_type = Column(String(80))
+    column_num = Column(Integer)
 
     def __init__(self, sheet, column_name, column_type, column_num):
         self.sheet = sheet

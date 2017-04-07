@@ -1,5 +1,5 @@
 from functools import wraps
-from air import session
+from app import session
 from sqlalchemy.exc import SQLAlchemyError, DBAPIError
 
 def attempt_db_modification(f):

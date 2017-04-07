@@ -21,6 +21,7 @@ fileConfig(config.config_file_name)
 from app import metadata, db
 import models
 from sqlalchemy.ext.automap import automap_base
+from sqlalchemy import schema
 
 Base = automap_base()
 Base.prepare(db.get_engine(), reflect=True)
@@ -29,18 +30,22 @@ print(Base.classes)
 print(dir(Base.classes))
 classes = Base.classes
 for c in classes:
-    print(c)
+    print(c.metadata)
 
-print(metadata)
-print(dir(metadata))
-print()
-print(models.Sheets_Schema)
-print(dir(models.Sheets_Schema))
-print()
-print(models.Sheets_Schema.metadata)
-print(dir(models.Sheets_Schema.metadata))
-#target_metadata = models.Sheets_Schema.metadata
-target_metadata = Base.metadata
+print(dir(Base.classes.table_1))
+print(dir(Base.classes.table_1.prepare))
+print(Base.classes.table_1.prepare)
+#print(metadata)
+#print(dir(metadata))
+#print()
+#print(models.Sheets_Schema)
+#print(dir(models.Sheets_Schema))
+#print()
+#print(models.Sheets_Schema.metadata)
+#print(dir(models.Sheets_Schema.metadata))
+md = schema.MetaData(metadata)
+print(md)
+target_metadata = models.Sheets_Schema.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:

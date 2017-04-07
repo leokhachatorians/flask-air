@@ -1,12 +1,14 @@
 import sqlalchemy
 import sqlalchemy.types as sa_Types
 import models
-from air import session
+from initdb import session, metadata
 from sqlalchemy import and_
+from sqlalchemy.ext.declarative import declarative_base
 from wrappers import attempt_db_modification
+from migrate.changeset import *
 
-def generate_table(data, db):
-    metadata = sqlalchemy.MetaData(db.get_engine())
+def generate_table(data, engine):
+    metadata = sqlalchemy.MetaData(engine)
     names = [i for i in range(len(data['column_names']))]
     types = data['column_types']
 
@@ -15,7 +17,8 @@ def generate_table(data, db):
             sqlalchemy.Column('id', sqlalchemy.Integer, primary_key=True),
             *(sqlalchemy.Column('col_{}'.format(name),
                 getattr(sa_Types, _type)()) for (name, _type) in zip(names,types)))
-    table.create()
+    metadata.create_all()
+
 
 def standardize_form_data(form):
     """
@@ -60,6 +63,13 @@ def user_adds_column(form, sheet, schema):
     current_session = session.object_session(new_col)
     current_session.add(new_col)
     current_session.commit()
+
+    table = sqlalchemy.Table("table_{}".format(sheet.id),
+            metadata)
+    col = sqlalchemy.Column('col_{}'.format(new_col.column_num),
+            getattr(sa_Types, new_col.column_type))
+    table.append_column(col)
+    col.create(table, populate_default=True)
 
 def user_removes_columns(sheet, schema, request):
         cols_to_delete = request.form.getlist("to_delete")
