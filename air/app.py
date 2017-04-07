@@ -4,7 +4,6 @@ from flask import (
         render_template, flash, current_app
 )
 from sqlalchemy.orm import sessionmaker, scoped_session
-from sqlalchemy.ext.automap import automap_base
 from sqlalchemy import Table, MetaData
 from initdb import session, metadata, engine
 import sqlalchemy
