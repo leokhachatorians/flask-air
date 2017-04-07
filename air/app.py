@@ -3,7 +3,6 @@ from flask import (
         Flask, request, session, g, redirect, url_for, abort,
         render_template, flash, current_app
 )
-from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy import Table, MetaData
@@ -22,11 +21,6 @@ app.config.update(dict(
 ))
 
 app.config.from_envvar('AIR_SETTINGS', silent=True)
-
-#db = SQLAlchemy(app)
-#metadata = MetaData(bind=db.get_engine)
-#Session = sessionmaker(bind=engine)
-#session = Session()
 
 import forms, helpers, models
 
