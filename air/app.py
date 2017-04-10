@@ -37,18 +37,6 @@ def index():
         return redirect(url_for('index'))
     return render_template("index.html", sheets=sheets, form=form)
 
-@app.route('/create_new_sheet_test', methods=['POST'])
-def create_new_sheet_test():
-    if request.method  == 'POST':
-        name = request.form['new_table_name']
-        sheet = models.Sheets(1, name)
-        session.add(sheet)
-        session.commit()
-        helpers.generate_table_test(name, sheet.id, engine)
-        return redirect(url_for('index'))
-    return redirect(url_for('index'))
-
-
 @app.route('/create_new_sheet', methods=['GET', 'POST'])
 def create_new_sheet():
     """

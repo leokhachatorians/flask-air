@@ -46,6 +46,11 @@
                   <tr>
                     <td style="vertical-align: middle;"><label class="col-lg-2 control-label">Table</label></td>
                     <td>{{ form.sheet_name }}</td>
+                    {% for field in form.errors %}
+                      {% for error in form.errors[field] %}
+                        <td><strong>{{ error }}</strong></td>
+                      {% endfor %}
+                    {% endfor %}
                   </tr>
                   <tr>
                     <td></td>
