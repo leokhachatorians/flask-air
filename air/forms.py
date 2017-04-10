@@ -32,5 +32,4 @@ class DeleteColumnForm(Form):
             render_kw={
                 "class":"btn btn-xs btn-danger",
                 "value": "Delete"
-                }
-    )
+                })

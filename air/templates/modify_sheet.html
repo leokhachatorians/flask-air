@@ -29,9 +29,57 @@
 
       <div class="ibox-content">
         <form role="form" class="form-inline">
-          <button type="button" class="btn btn-w-m btn-success" style="margin-bottom: 0;">Add Column</button>
+          <button id="new_column_button" type="button" class="btn btn-w-m btn-success" style="margin-bottom: 0;">Add Column</button>
         </form>
       </div>
+
+      <!-- Add Column Well -->
+      <div id="new_column_well" class="ibox-content col-lg-12" style="display: none;">
+        <div class="well col-lg-3">
+          <form role="form" class="form-inline">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th colspan="3" style="text-align: center;"><h3>Add Column</h3></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style="vertical-align: middle;"><label class="col-lg-2 control-label">Name</label></td>
+                  <td><input type="text" placeholder="Name" class="form-control"></td>
+                </tr>
+                <tr>
+                  <td style="vertical-align: middle;"><label class="col-lg-2 control-label">Type</label></td>
+                  <td>
+                    <select class="form-control" name="account">
+                      <option>option 1</option>
+                      <option>option 2</option>
+                      <option>option 3</option>
+                      <option>option 4</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="vertical-align: middle;"><label class="col-lg-2 control-label" for="checkbox-null">Nullable</label></td>
+                  <td>
+                    <input type="checkbox" value="option1" id="checkbox-null">
+                  </td>
+                </tr>
+                <tr>
+                  <td></td>
+                  <td class="form-inline">
+                    <button type="button" class="btn btn-s btn-primary" style="margin-bottom: 0;">Create</button>
+                    <button id="cancel_new_column_button" type="button" class="btn btn-s btn-default" style="margin-bottom: 0; margin-left: 10px">Cancel</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </form>
+        </div>
+      </div>
+      <!-- End of Add Column Well-->
+
+
 
     <div class="ibox-content">
       <div class="table-responsive">
