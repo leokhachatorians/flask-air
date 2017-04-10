@@ -6,17 +6,16 @@ from wtforms.widgets import CheckboxInput
 
 import wtforms
 
-
 class NewSheetForm(Form):
     sheet_name = StringField('Sheet Name',
             [validators.Length(min=3, max=25), validators.DataRequired()],
-            render_kw={"placeholder": "People"})
-    column_names = StringField('Column Names',
-            [validators.Length(min=3, max=50), validators.DataRequired()],
-            render_kw={"placeholder": "Name, Age, Location"})
-    column_types = StringField('Column Types',
-            [validators.Length(min=3, max=50), validators.DataRequired()],
-            render_kw={"placeholder": "Text, Text, Text"})
+            render_kw={
+                "placeholder": "People",
+                "class": "form-control"})
+    submit_new_sheet = SubmitField('Create',
+            render_kw={
+                'class': 'btn btn-s btn-primary',
+                'style': 'margin-bottom: 0;'})
 
 class AddColumnForm(Form):
     column_name = StringField('Column Name',

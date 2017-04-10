@@ -23,11 +23,19 @@ app.config.from_envvar('AIR_SETTINGS', silent=True)
 
 import forms, helpers, models
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
     # hard coding user id for the time being
     sheets = session.query(models.Sheets).filter_by(user_id=1).all()
-    return render_template("index.html", sheets=sheets)
+    form = forms.NewSheetForm(request.form)
+
+    if request.method == 'POST' and form.validate():
+        sheet = models.Sheets(1, form.sheet_name.data)
+        session.add(sheet)
+        session.commit()
+        helpers.generate_table_test(form.sheet_name.data, sheet.id, engine)
+        return redirect(url_for('index'))
+    return render_template("index.html", sheets=sheets, form=form)
 
 @app.route('/create_new_sheet_test', methods=['POST'])
 def create_new_sheet_test():

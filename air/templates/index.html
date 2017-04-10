@@ -35,7 +35,7 @@
       <!-- Create Table Well -->
       <div id="create_table_well" class="ibox-content col-lg-12" style="display: none;">
         <div class="well col-lg-3">
-          <form role="form" method="POST" action="/create_new_sheet_test" class="form-inline">
+          <form role="form" method="POST" class="form-inline">
               <table class="table" style="">
                 <thead>
                   <tr>
@@ -45,12 +45,12 @@
                 <tbody>
                   <tr>
                     <td style="vertical-align: middle;"><label class="col-lg-2 control-label">Table</label></td>
-                    <td><input name="new_table_name" placeholder="Name" class="form-control"></td>
+                    <td>{{ form.sheet_name }}</td>
                   </tr>
                   <tr>
                     <td></td>
                     <td class="form-inline">
-                      <button type="submit" class="btn btn-s btn-primary" style="margin-bottom: 0;">Create</button>
+                      {{ form.submit_new_sheet }}
                       <button type="button" id="cancel_new_table_button" class="btn btn-s btn-default" style="margin-bottom: 0; margin-left: 10px">Cancel</button>
                     </td>
                   </tr>
