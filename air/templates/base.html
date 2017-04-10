@@ -10,10 +10,37 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}"/>
   </head>
 
-  <body class="container">
-    {% block content %}{% endblock %}
+  <body>
+
+    <div id="wrapper">
+      <div id="page-wrapper" class="gray-bg">
+        <div class="row row-border-bottom">
+          <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+            <ul class="nav navbar-top-links navbar-left" style="margin-left: 20px;">
+              <li>
+                <a class="navbar-brand" href="#">Table List</a>
+              </li>
+            </ul>
+            <ul class="nav navbar-top-links navbar-right">
+              <li>
+                <a href="#">
+                  <i class="fa fa-sign-out">Logout</i>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+        <div class="row">
+          <div class="wrapper wrapper-content animated fadeInRight">
+            {% block heading %}{% endblock %}
+            {% block content %}{% endblock %}
+          </div>
+        </div>
+      </div>
+    </div>
 
   <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
   <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
   </body>
 </html>

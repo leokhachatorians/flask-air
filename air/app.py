@@ -26,9 +26,20 @@ import forms, helpers, models
 @app.route('/')
 def index():
     # hard coding user id for the time being
-    #sheets = models.Sheets.query.filter_by(user_id=1).all()
     sheets = session.query(models.Sheets).filter_by(user_id=1).all()
     return render_template("index.html", sheets=sheets)
+
+@app.route('/create_new_sheet_test', methods=['POST'])
+def create_new_sheet_test():
+    if request.method  == 'POST':
+        name = request.form['new_table_name']
+        sheet = models.Sheets(1, name)
+        session.add(sheet)
+        session.commit()
+        helpers.generate_table_test(name, sheet.id, engine)
+        return redirect(url_for('index'))
+    return redirect(url_for('index'))
+
 
 @app.route('/create_new_sheet', methods=['GET', 'POST'])
 def create_new_sheet():

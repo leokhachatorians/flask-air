@@ -19,6 +19,13 @@ def generate_table(data, engine):
                 getattr(sa_Types, _type)()) for (name, _type) in zip(names,types)))
     metadata.create_all()
 
+def generate_table_test(name, parent_sheet_id, engine):
+    metadata = sqlalchemy.MetaData(engine)
+    table = sqlalchemy.Table(
+            'table_{}'.format(parent_sheet_id), metadata,
+            sqlalchemy.Column('id', sqlalchemy.Integer, primary_key=True))
+    metadata.create_all()
+
 
 def standardize_form_data(form):
     """
