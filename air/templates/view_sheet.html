@@ -3,11 +3,6 @@
 {% block content %}
 
 <h1>{{ sheet_name }}</h1>
-<h3>
-  <a href="{{ url_for('modify_sheet', sheet_name=sheet_name) }}">
-    Modify {{ sheet_name }}
-  </a>
-</h3>
 
 <form method="POST">
   {% for i in schema %}

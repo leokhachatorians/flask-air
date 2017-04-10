@@ -18,7 +18,7 @@
           <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
             <ul class="nav navbar-top-links navbar-left" style="margin-left: 20px;">
               <li>
-                <a class="navbar-brand" href="#">Table List</a>
+                <a class="navbar-brand" href="/">Table List</a>
               </li>
             </ul>
             <ul class="nav navbar-top-links navbar-right">
@@ -41,6 +41,6 @@
 
   <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
   <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
-  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  {% block unique_scripts %}{% endblock %}
   </body>
 </html>

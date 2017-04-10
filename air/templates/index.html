@@ -28,7 +28,6 @@
 
       <div class="ibox-content">
 	      <button id="new_table_button" type="button" class="btn btn-w-m btn-success" style="margin-bottom: 0;">Create New Table</button>
-        <!--<a class="btn btn-w-m btn-success" href="{{ url_for('create_new_sheet') }}">Create New Table</a> -->
       </div>
       <!-- End Top Section -->
 
@@ -85,8 +84,8 @@
               <tr class="gradeC">
                 <td>{{ sheet.sheet_name }}</td>
                 <td>
-                  <button type="button" class="btn btn-xs btn-success" style="margin-bottom: 0;">Edit Columns</button>
-                  <button type="button" class="btn btn-xs btn-primary" style="margin-bottom: 0;">Edit Data</button>
+                  <a href="{{ url_for('modify_sheet', sheet_name=sheet.sheet_name) }}" type="button" class="btn btn-xs btn-success" style="margin-bottom: 0;">Edit Columns</a>
+                  <a href="{{ url_for('view_sheet', sheet_name=sheet.sheet_name) }}" type="button" class="btn btn-xs btn-primary" style="margin-bottom: 0;">Edit Data</a>
                 </td>
               </tr>
               {% endfor %}
@@ -100,4 +99,8 @@
     </div>
   </div>
 
+{% endblock %}
+
+{% block unique_scripts %}
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 {% endblock %}
