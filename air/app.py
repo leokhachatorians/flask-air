@@ -112,9 +112,9 @@ def modify_sheet(sheet_name):
     schema = session.query(models.Sheets_Schema).filter(models.Sheets_Schema.sheet_id==sheet.id)
 
     if request.method == 'POST':
-        if add_form.submit_add_column.data and add_form.validate():
-            helpers.user_adds_column(add_form, sheet, schema)
-        elif delete_form.submit_delete_columns.data and delete_form.validate():
+       # if add_form.submit_add_column.data and add_form.validate():
+       #     helpers.user_adds_column(add_form, sheet, schema)
+        if delete_form.submit_delete_columns.data and delete_form.validate():
             helpers.user_removes_columns(sheet, schema, request)
 
         return redirect(url_for('modify_sheet', sheet_name=sheet_name))

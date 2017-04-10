@@ -28,4 +28,9 @@ class AddColumnForm(Form):
     submit_add_column = SubmitField('Add Column')
 
 class DeleteColumnForm(Form):
-    submit_delete_columns = SubmitField('Delete Columns')
+    submit_delete_columns = SubmitField('Delete Columns',
+            render_kw={
+                "class":"btn btn-xs btn-danger",
+                "value": "Delete"
+                }
+    )

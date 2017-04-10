@@ -119,9 +119,6 @@ def user_removes_columns(sheet, schema, request):
         leftover_columns = session.query(models.Sheets_Schema).filter(models.Sheets_Schema.sheet_id==sheet.id).all()
         for i, col in enumerate(leftover_columns):
             #print(dir(generated_table))
-            test = getattr(generated_table.c, 'col_{}'.format(leftover_columns[i].column_num))
-            print(test)
-            print(dir(test))
             #test.alter(name='col_{}'.format(i))
             ##generated_table.c.
             ##left_col..alter(name="col_{}".format(i))
