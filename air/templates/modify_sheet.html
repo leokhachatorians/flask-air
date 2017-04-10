@@ -34,85 +34,86 @@
       </div>
 
       <!-- Add Column Well -->
-      <div id="new_column_well" class="ibox-content col-lg-12" style="display: none;">
-        <div class="well col-lg-3">
-          <form role="form" class="form-inline">
-            <table class="table">
+      <form method="POST">
+        <div id="new_column_well" class="ibox-content col-lg-12" style="display: none;">
+          <div class="well col-lg-3">
+            <form role="form" class="form-inline">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th colspan="3" style="text-align: center;"><h3>Add Column</h3></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style="vertical-align: middle;"><label class="col-lg-2 control-label">Name</label></td>
+                    <td>{{ add_form.column_name }}</td>
+                  </tr>
+                  <tr>
+                    <td style="vertical-align: middle;"><label class="col-lg-2 control-label">Type</label></td>
+                    <td>
+                      <select class="form-control" name="account">
+                        <option>option 1</option>
+                        <option>option 2</option>
+                        <option>option 3</option>
+                        <option>option 4</option>
+                      </select>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="vertical-align: middle;"><label class="col-lg-2 control-label" for="checkbox-null">Nullable</label></td>
+                    <td>
+                      <input type="checkbox" value="option1" id="checkbox-null">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td class="form-inline">
+                      {{ add_form.submit_add_column }}
+                      <button id="cancel_new_column_button" type="button" class="btn btn-s btn-default" style="margin-bottom: 0; margin-left: 10px">Cancel</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </form>
+          </div>
+        </div>
+      </form>
+      <!-- End of Add Column Well-->
+
+      <!-- Table of Column Info -->
+      <div class="ibox-content">
+        <div class="table-responsive">
+          <div role="status" aria-live="polite" style="padding-bottom: 8px;">Showing 1 to 14 of 14 entries</div>
+            <table class="table table-striped table-bordered table-hover dataTables-example" >
               <thead>
                 <tr>
-                  <th colspan="3" style="text-align: center;"><h3>Add Column</h3></th>
+                  <th>#</th>
+                  <th>Column Name</th>
+                  <th>Column Type</th>
+                  <th>Commands</th>
                 </tr>
               </thead>
               <tbody>
+                {% for i in schema %}
                 <tr>
-                  <td style="vertical-align: middle;"><label class="col-lg-2 control-label">Name</label></td>
-                  <td><input type="text" placeholder="Name" class="form-control"></td>
-                </tr>
-                <tr>
-                  <td style="vertical-align: middle;"><label class="col-lg-2 control-label">Type</label></td>
+                  <td>{{ loop.index }}</td>
+                  <td>{{ i.column_name }}</td>
+                  <td>{{ i.column_type }}</td>
                   <td>
-                    <select class="form-control" name="account">
-                      <option>option 1</option>
-                      <option>option 2</option>
-                      <option>option 3</option>
-                      <option>option 4</option>
-                    </select>
+                    <form method="POST">
+                      <input type="submit" class="btn btn-xs btn-success" value="Edit">
+                      {{ delete_form.submit_delete_columns }}
+                      <input type="hidden" name="to_delete" value="{{ i.column_name }}">
+                    </form>
                   </td>
                 </tr>
-                <tr>
-                  <td style="vertical-align: middle;"><label class="col-lg-2 control-label" for="checkbox-null">Nullable</label></td>
-                  <td>
-                    <input type="checkbox" value="option1" id="checkbox-null">
-                  </td>
-                </tr>
-                <tr>
-                  <td></td>
-                  <td class="form-inline">
-                    <button type="button" class="btn btn-s btn-primary" style="margin-bottom: 0;">Create</button>
-                    <button id="cancel_new_column_button" type="button" class="btn btn-s btn-default" style="margin-bottom: 0; margin-left: 10px">Cancel</button>
-                  </td>
-                </tr>
+                {% endfor %}
               </tbody>
             </table>
-          </form>
         </div>
       </div>
-      <!-- End of Add Column Well-->
-
-
-
-    <div class="ibox-content">
-      <div class="table-responsive">
-        <div role="status" aria-live="polite" style="padding-bottom: 8px;">Showing 1 to 14 of 14 entries</div>
-          <table class="table table-striped table-bordered table-hover dataTables-example" >
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Column Name</th>
-                <th>Column Type</th>
-                <th>Commands</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for i in schema %}
-              <tr>
-                <td>{{ loop.index }}</td>
-                <td>{{ i.column_name }}</td>
-                <td>{{ i.column_type }}</td>
-                <td>
-                  <form method="POST">
-                    <input type="submit" class="btn btn-xs btn-success" value="Edit">
-                    {{ delete_form.submit_delete_columns }}
-                    <input type="hidden" name="to_delete" value="{{ i.column_name }}">
-                  </form>
-                </td>
-              </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-      </div>
-    </div>
-
+      <!-- End of Table of Column Info -->
 {% endblock %}
 
 {% block unique_scripts %}

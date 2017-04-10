@@ -20,11 +20,16 @@ class NewSheetForm(Form):
 class AddColumnForm(Form):
     column_name = StringField('Column Name',
             [validators.Length(min=3, max=25), validators.DataRequired()],
-            render_kw={"placeholder": "PhoneNumber"})
-    column_type = StringField('Column Type',
-            [validators.Length(min=3, max=25), validators.DataRequired()],
-            render_kw={"placeholder": "Text"})
-    submit_add_column = SubmitField('Add Column')
+            render_kw={
+                "placeholder": "Name",
+                "class": "form-control"})
+   # column_type = StringField('Column Type',
+   #         [validators.Length(min=3, max=25), validators.DataRequired()],
+   #         render_kw={"placeholder": "Text"})
+    submit_add_column = SubmitField('Add',
+            render_kw={
+                "class": "btn btn-s btn-primary",
+                "style": "margin-bottom: 0;"})
 
 class DeleteColumnForm(Form):
     submit_delete_columns = SubmitField('Delete Columns',

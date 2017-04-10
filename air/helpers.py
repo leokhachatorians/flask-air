@@ -80,7 +80,8 @@ def user_adds_column(form, sheet, schema):
 
     new_col = models.Sheets_Schema(
             sheet, form.column_name.data,
-            form.column_type.data,
+            'Text',
+            #form.column_type.data,
             column_num)
 
     current_session = session.object_session(new_col)
