@@ -27,15 +27,22 @@ import forms, helpers, models
 def index():
     # hard coding user id for the time being
     sheets = session.query(models.Sheets).filter_by(user_id=1).all()
-    form = forms.NewSheetForm(request.form)
+    new_sheet_form = forms.NewSheetForm(request.form)
+    delete_table_form = forms.DeleteTableForm(request.form)
 
-    if request.method == 'POST' and form.validate():
-        sheet = models.Sheets(1, form.sheet_name.data)
-        session.add(sheet)
-        session.commit()
-        helpers.generate_table_test(form.sheet_name.data, sheet.id, engine)
-        return redirect(url_for('index'))
-    return render_template("index.html", sheets=sheets, form=form)
+    if request.method == 'POST':
+        if new_sheet_form.submit_new_sheet.data and new_sheet_form.validate():
+            name = new_sheet_form.sheet_name.data
+            sheet = models.Sheets(1, name)
+            session.add(sheet)
+            session.commit()
+            helpers.generate_table_test(name, sheet.id, engine)
+            return redirect(url_for('index'))
+        if delete_table_form.submit_delete_table.data and delete_table_form.validate():
+            helpers.user_deletes_table(sheets, request)
+            return redirect(url_for('index'))
+    return render_template("index.html", sheets=sheets,
+            new_sheet_form=new_sheet_form, delete_table_form=delete_table_form)
 
 #@app.route('/create_new_sheet', methods=['GET', 'POST'])
 #def create_new_sheet():

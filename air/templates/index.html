@@ -44,9 +44,9 @@
                 <tbody>
                   <tr>
                     <td style="vertical-align: middle;"><label class="col-lg-2 control-label">Table</label></td>
-                    <td>{{ form.sheet_name }}</td>
-                    {% for field in form.errors %}
-                      {% for error in form.errors[field] %}
+                    <td>{{ new_sheet_form.sheet_name }}</td>
+                    {% for field in new_sheet_form.errors %}
+                      {% for error in new_sheet_form.errors[field] %}
                         <td><strong>{{ error }}</strong></td>
                       {% endfor %}
                     {% endfor %}
@@ -54,7 +54,7 @@
                   <tr>
                     <td></td>
                     <td class="form-inline">
-                      {{ form.submit_new_sheet }}
+                      {{ new_sheet_form.submit_new_sheet }}
                       <button type="button" id="cancel_new_table_button" class="btn btn-s btn-default" style="margin-bottom: 0; margin-left: 10px">Cancel</button>
                     </td>
                   </tr>
@@ -87,7 +87,8 @@
                   <form method="POST">
                     <a href="{{ url_for('modify_sheet', sheet_name=sheet.sheet_name) }}" type="button" class="btn btn-xs btn-success" style="margin-bottom: 0;">Edit Columns</a>
                     <a href="{{ url_for('view_sheet', sheet_name=sheet.sheet_name) }}" type="button" class="btn btn-xs btn-primary" style="margin-bottom: 0;">Edit Data</a>
-                    <input type="submit" class="btn btn-xs btn-danger" style="margin-bottom: 0;" value="Delete">
+                    {{ delete_table_form.submit_delete_table }}
+                    <input type="hidden" name="sheet_to_drop" value="{{ sheet.sheet_name }}">
                   </form>
                 </td>
               </tr>

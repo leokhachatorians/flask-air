@@ -26,7 +26,6 @@ def generate_table_test(name, parent_sheet_id, engine):
             sqlalchemy.Column('id', sqlalchemy.Integer, primary_key=True))
     metadata.create_all()
 
-
 def standardize_form_data(form):
     """
     Given a form, attempt to standardize the
@@ -126,6 +125,18 @@ def user_removes_columns(sheet, schema, request):
             ##left_col.column_num = i
             col.column_num = i
         session.commit()
+
+def user_deletes_table(sheets, request):
+    found = None
+    for sheet in sheets:
+        if sheet.sheet_name == request.form.getlist("sheet_to_drop")[0]:
+            found = sheet
+            generated_table = sqlalchemy.Table("table_{}".format(sheet.id), metadata).drop()
+            break
+    session.query(models.Sheets_Schema).filter_by(sheet_id=found.id).delete()
+    session.query(models.Sheets).filter_by(id=found.id).delete()
+    session.commit()
+
 
 def format_user_data(data):
     content = []
