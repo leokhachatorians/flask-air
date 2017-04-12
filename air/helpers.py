@@ -133,10 +133,8 @@ def user_deletes_table(sheets, request):
             found = sheet
             generated_table = sqlalchemy.Table("table_{}".format(sheet.id), metadata).drop()
             break
-    session.query(models.Sheets_Schema).filter_by(sheet_id=found.id).delete()
     session.query(models.Sheets).filter_by(id=found.id).delete()
     session.commit()
-
 
 def format_user_data(data):
     content = []

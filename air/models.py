@@ -45,9 +45,9 @@ class Sheets(Base):
 class Sheets_Schema(Base):
     __tablename__ = 'sheets_schema'
     id = Column(Integer, primary_key=True)
-    sheet_id = Column(Integer, ForeignKey("sheets.id"))
+    sheet_id = Column(Integer, ForeignKey("sheets.id", ondelete='CASCADE'))
     sheet = relationship('Sheets',
-            backref=backref('sheets_schema', lazy='dynamic'))
+            backref=backref('sheets_schema', lazy='dynamic', cascade='all, delete-orphan'))
     column_name = Column(String(150), unique=True)
     column_type = Column(String(80))
     column_num = Column(Integer)
