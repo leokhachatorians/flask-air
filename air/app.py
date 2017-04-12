@@ -104,6 +104,7 @@ def modify_sheet(sheet_name):
     """
     add_form = forms.AddColumnForm(request.form)
     delete_form = forms.DeleteColumnForm(request.form)
+    edit_form = forms.EditColumnForm(request.form)
     sheet = session.query(models.Sheets).filter_by(sheet_name=sheet_name).first()
     schema = session.query(models.Sheets_Schema).filter(models.Sheets_Schema.sheet_id==sheet.id)
 
@@ -112,11 +113,14 @@ def modify_sheet(sheet_name):
             helpers.user_adds_column(add_form, sheet, schema)
         if delete_form.submit_delete_columns.data and delete_form.validate():
             helpers.user_removes_columns(sheet, schema, request)
+        if edit_form.submit_edit_column.data and edit_form.validate():
+            pass
 
         return redirect(url_for('modify_sheet', sheet_name=sheet_name))
     return render_template('modify_sheet.html',
             schema=schema, add_form=add_form,
-            delete_form=delete_form, sheet_name=sheet_name)
+            delete_form=delete_form, edit_form=edit_form,
+            sheet_name=sheet_name)
 
 if __name__ == "__main__":
     app.run(debug=True)

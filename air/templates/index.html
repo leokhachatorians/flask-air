@@ -83,9 +83,12 @@
               {% for sheet in sheets %}
               <tr class="gradeC">
                 <td>{{ sheet.sheet_name }}</td>
-                <td>
-                  <a href="{{ url_for('modify_sheet', sheet_name=sheet.sheet_name) }}" type="button" class="btn btn-xs btn-success" style="margin-bottom: 0;">Edit Columns</a>
-                  <a href="{{ url_for('view_sheet', sheet_name=sheet.sheet_name) }}" type="button" class="btn btn-xs btn-primary" style="margin-bottom: 0;">Edit Data</a>
+                <td class="form-inline">
+                  <form method="POST">
+                    <a href="{{ url_for('modify_sheet', sheet_name=sheet.sheet_name) }}" type="button" class="btn btn-xs btn-success" style="margin-bottom: 0;">Edit Columns</a>
+                    <a href="{{ url_for('view_sheet', sheet_name=sheet.sheet_name) }}" type="button" class="btn btn-xs btn-primary" style="margin-bottom: 0;">Edit Data</a>
+                    <input type="submit" class="btn btn-xs btn-danger" style="margin-bottom: 0;" value="Delete">
+                  </form>
                 </td>
               </tr>
               {% endfor %}

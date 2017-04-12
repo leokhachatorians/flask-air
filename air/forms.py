@@ -1,6 +1,6 @@
 from wtforms import (
         Form, BooleanField, StringField, PasswordField, validators,
-        SubmitField,
+        SubmitField, SelectField,
 )
 from wtforms.widgets import CheckboxInput
 
@@ -23,12 +23,32 @@ class AddColumnForm(Form):
             render_kw={
                 "placeholder": "Name",
                 "class": "form-control"})
-   # column_type = StringField('Column Type',
-   #         [validators.Length(min=3, max=25), validators.DataRequired()],
-   #         render_kw={"placeholder": "Text"})
+
+    types = SelectField('Type',
+            choices=[('text', 'Text'), ('bytea', 'File/Picture')],
+            render_kw={
+                "class": "form-control",})
+
     submit_add_column = SubmitField('Add',
             render_kw={
                 "class": "btn btn-s btn-primary",
+                "style": "margin-bottom: 0;"})
+
+class EditColumnForm(Form):
+    column_name = StringField('New Column Name',
+            [validators.Length(min=3, max=25), validators.DataRequired()],
+            render_kw={
+                "placeholder": "Name",
+                "class": "form-control"})
+
+    types = SelectField('Type',
+            choices=[('text', 'Text'), ('bytea', 'File/Picture')],
+            render_kw={
+                "class": "form-control",})
+
+    submit_edit_column = SubmitField('Add',
+            render_kw={
+                "class": "btn btn-s btn-success",
                 "style": "margin-bottom: 0;"})
 
 class DeleteColumnForm(Form):

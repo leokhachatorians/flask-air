@@ -27,11 +27,13 @@
         </div>
       </div>
 
+      <!-- Add Column Button -->
       <div class="ibox-content">
         <form role="form" class="form-inline">
           <button id="new_column_button" type="button" class="btn btn-w-m btn-success" style="margin-bottom: 0;">Add Column</button>
         </form>
       </div>
+      <!-- End Add Column Button -->
 
       <!-- Add Column Well -->
       <form method="POST">
@@ -51,14 +53,7 @@
                   </tr>
                   <tr>
                     <td style="vertical-align: middle;"><label class="col-lg-2 control-label">Type</label></td>
-                    <td>
-                      <select class="form-control" name="account">
-                        <option>option 1</option>
-                        <option>option 2</option>
-                        <option>option 3</option>
-                        <option>option 4</option>
-                      </select>
-                    </td>
+                    <td>{{ add_form.types }}</td>
                   </tr>
                   <tr>
                     <td style="vertical-align: middle;"><label class="col-lg-2 control-label" for="checkbox-null">Nullable</label></td>
@@ -81,6 +76,52 @@
       </form>
       <!-- End of Add Column Well-->
 
+      <!-- Edit Column Well -->
+      <form method="POST">
+        <div id="edit_column_well" class="ibox-content col-lg-12" style="display: none;">
+          <div class="well col-lg-3">
+            <form role="form" class="form-inline">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th colspan="3" style="text-align: center;"><h3 id="edit_column_header">Edit Column &#60;column&#62;</h3></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style-"vertical-align: middle;"><label class="col-lg-2 control-label">Old Name</label></td>
+                    <td><input type="text" id="edit_column_old_name" class="form-control" value="placeholder" disabled></td>
+                  </tr>
+                  <tr>
+                    <td style="vertical-align: middle;"><label class="col-lg-2 control-label">New Name</label></td>
+                    <td>{{ edit_form.column_name }}</td>
+                  </tr>
+                  <tr>
+                    <td style="vertical-align: middle;"><label class="col-lg-2 control-label">Type</label></td>
+                    <td>{{ edit_form.types }}</td>
+                  </tr>
+                  <tr>
+                    <td style="vertical-align: middle;"><label class="col-lg-2 control-label" for="checkbox-null">Nullable</label></td>
+                    <td>
+                      <input type="checkbox" value="option1" id="checkbox-null">
+                    </td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td class="form-inline">
+                      {{ edit_form.submit_edit_column }}
+                      <button id="cancel_edit_column_button" type="button" class="btn btn-s btn-default" style="margin-bottom: 0; margin-left: 10px">Cancel</button>
+                      <input id="col_to_alter" type="hidden" name="col_to_alter">
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </form>
+          </div>
+        </div>
+      </form>
+      <!-- End Edit Column Well -->
+
       <!-- Table of Column Info -->
       <div class="ibox-content">
         <div class="table-responsive">
@@ -102,9 +143,9 @@
                   <td>{{ i.column_type }}</td>
                   <td>
                     <form method="POST">
-                      <input type="submit" class="btn btn-xs btn-success" value="Edit">
-                        {{ delete_form.submit_delete_columns }}
-                      <input type="hidden" name="to_delete" value="{{ i.column_name }}">
+                      <button id="edit_column_button_{{ loop.index0 }}" value="{{ i.column_name }}" type="button" class="btn btn-xs btn-success">Edit</button>
+                      {{ delete_form.submit_delete_columns }}
+                      <input type="hidden" id="clicked_column" name="to_delete" value="{{ i.column_name }}">
                     </form>
                   </td>
                 </tr>
@@ -114,6 +155,7 @@
         </div>
       </div>
       <!-- End of Table of Column Info -->
+    </div>
 {% endblock content %}
 
 {% block unique_scripts %}
