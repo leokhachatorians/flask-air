@@ -15,15 +15,6 @@
         <!-- Top Section -->
         <div class="ibox-title">
           <h5>Your Tables</h5>
-          <a class="collapse-link">
-            <i class="fa fa-chevron-up"></i>
-          </a>
-          <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-            <i class="fa fa-wrench"></i>
-          </a>
-          <a class="close-link">
-            <i class="fa fa-times"></i>
-          </a>
         </div>
 
       <div class="ibox-content">
@@ -87,7 +78,7 @@
                   <form method="POST">
                     <a href="{{ url_for('modify_sheet', sheet_name=sheet.sheet_name) }}" type="button" class="btn btn-xs btn-success" style="margin-bottom: 0;">Edit Columns</a>
                     <a href="{{ url_for('view_sheet', sheet_name=sheet.sheet_name) }}" type="button" class="btn btn-xs btn-primary" style="margin-bottom: 0;">Edit Data</a>
-                    {{ delete_table_form.submit_delete_table }}
+                    {{ delete_form.submit_delete }}
                     <input type="hidden" name="sheet_to_drop" value="{{ sheet.sheet_name }}">
                   </form>
                 </td>

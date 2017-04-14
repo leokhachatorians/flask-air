@@ -51,17 +51,10 @@ class EditColumnForm(Form):
                 "class": "btn btn-s btn-success",
                 "style": "margin-bottom: 0;"})
 
-class DeleteColumnForm(Form):
-    submit_delete_columns = SubmitField('Delete Columns',
+class BaseDeleteForm(Form):
+    submit_delete = SubmitField('Delete',
             render_kw={
                 "class":"btn btn-xs btn-danger",
-                "value": "Delete"
-                })
-
-class DeleteTableForm(Form):
-    submit_delete_table = SubmitField('Delete',
-            render_kw={
-                "class": "btn btn-xs btn-danger",
                 "value": "Delete",
                 "style": "margin-bottom: 0",
                 })

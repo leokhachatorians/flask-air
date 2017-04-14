@@ -143,8 +143,10 @@
                   <td>{{ i.column_type }}</td>
                   <td>
                     <form method="POST">
-                      <button id="edit_column_button_{{ loop.index0 }}" value="{{ i.column_name }}" type="button" class="btn btn-xs btn-success">Edit</button>
-                      {{ delete_form.submit_delete_columns }}
+                      <button id="edit_column_button_{{ loop.index0 }}" value="{{ i.column_name }}" 
+                        type="button" class="btn btn-xs btn-success"
+                        style="margin-bottom: 0;">Edit</button>
+                      {{ delete_form.submit_delete }}
                       <input type="hidden" id="clicked_column" name="to_delete" value="{{ i.column_name }}">
                     </form>
                   </td>

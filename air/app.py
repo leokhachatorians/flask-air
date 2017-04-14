@@ -28,7 +28,7 @@ def index():
     # hard coding user id for the time being
     sheets = session.query(models.Sheets).filter_by(user_id=1).all()
     new_sheet_form = forms.NewSheetForm(request.form)
-    delete_table_form = forms.DeleteTableForm(request.form)
+    delete_form = forms.BaseDeleteForm(request.form)
 
     if request.method == 'POST':
         if new_sheet_form.submit_new_sheet.data and new_sheet_form.validate():
@@ -38,37 +38,11 @@ def index():
             session.commit()
             helpers.generate_table_test(name, sheet.id, engine)
             return redirect(url_for('index'))
-        if delete_table_form.submit_delete_table.data and delete_table_form.validate():
+        elif delete_form.submit_delete.data and delete_form.validate():
             helpers.user_deletes_table(sheets, request)
             return redirect(url_for('index'))
     return render_template("index.html", sheets=sheets,
-            new_sheet_form=new_sheet_form, delete_table_form=delete_table_form)
-
-#@app.route('/create_new_sheet', methods=['GET', 'POST'])
-#def create_new_sheet():
-#    """
-#    View to handle user creation of new "Sheets".
-#
-#    Data is standardized prior to it being read for table
-#    generation.
-#    """
-#    form = forms.NewSheetForm(request.form)
-#    if request.method == 'POST' and form.validate():
-#        sheet = models.Sheets(1, form.sheet_name.data)
-#        session.add(sheet)
-#        session.commit()
-#
-#        data = helpers.standardize_form_data(form)
-#        data['s_ID'] = sheet.id
-#
-#        for i, (c_name, c_type) in enumerate(zip(data['column_names'], data['column_types'])):
-#            schema = models.Sheets_Schema(sheet, c_name, c_type, i)
-#            session.add(schema)
-#
-#        session.commit()
-#        helpers.generate_table(data, engine)
-#        return redirect(url_for('index'))
-#    return render_template('create_new_sheet.html', form=form)
+            new_sheet_form=new_sheet_form, delete_form=delete_form)
 
 @app.route('/view_sheet/<sheet_name>', methods=['GET', 'POST'])
 def view_sheet(sheet_name):
@@ -110,7 +84,7 @@ def modify_sheet(sheet_name):
     each respective action.
     """
     add_form = forms.AddColumnForm(request.form)
-    delete_form = forms.DeleteColumnForm(request.form)
+    delete_form = forms.BaseDeleteForm(request.form)
     edit_form = forms.EditColumnForm(request.form)
     sheet = session.query(models.Sheets).filter_by(sheet_name=sheet_name).first()
     schema = session.query(models.Sheets_Schema).filter(models.Sheets_Schema.sheet_id==sheet.id)
@@ -118,9 +92,9 @@ def modify_sheet(sheet_name):
     if request.method == 'POST':
         if add_form.submit_add_column.data and add_form.validate():
             helpers.user_adds_column(add_form, sheet, schema)
-        if delete_form.submit_delete_columns.data and delete_form.validate():
+        elif delete_form.submit_delete.data and delete_form.validate():
             helpers.user_removes_columns(sheet, schema, request)
-        if edit_form.submit_edit_column.data and edit_form.validate():
+        elif edit_form.submit_edit_column.data and edit_form.validate():
             pass
 
         return redirect(url_for('modify_sheet', sheet_name=sheet_name))
