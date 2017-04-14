@@ -7,12 +7,25 @@ from sqlalchemy.ext.declarative import declarative_base
 from wrappers import attempt_db_modification
 from migrate.changeset import *
 
-def generate_table(name, parent_sheet_id, engine):
+def generate_table(form, engine):
+    name = form.sheet_name.data
+    sheet = models.Sheets(1, form.sheet_name.data)
+    session.add(sheet)
+    session.commit()
+
     metadata = sqlalchemy.MetaData(engine)
     table = sqlalchemy.Table(
-            'table_{}'.format(parent_sheet_id), metadata,
+            'table_{}'.format(sheet.id), metadata,
             sqlalchemy.Column('id', sqlalchemy.Integer, primary_key=True))
     metadata.create_all()
+
+def user_adds_data(generated_table, schema, request, engine):
+    table_values = {}
+    for index, value in enumerate(request.form.getlist("add_records")):
+        table_values['col_{}'.format(schema[index].id)] = value
+    ins = generated_table.insert().values(table_values)
+    conn = engine.connect()
+    result = conn.execute(ins)
 
 def user_adds_column(form, sheet, schema):
     """Adds a user-defined column
@@ -74,7 +87,6 @@ def user_alters_column(edit_form, sheet, request):
     col.column_name = edit_form.column_name.data
     session.commit()
     #table = sqlalchemy.Table("table_{}".format(sheet.id), metadata, autoload=True)
-
 
 def user_deletes_table(sheets, request):
     sheet_to_drop_id = request.form.getlist("sheet_to_drop")[0]

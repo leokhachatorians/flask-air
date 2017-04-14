@@ -32,11 +32,7 @@ def index():
 
     if request.method == 'POST':
         if new_sheet_form.submit_new_sheet.data and new_sheet_form.validate():
-            name = new_sheet_form.sheet_name.data
-            sheet = models.Sheets(1, name)
-            session.add(sheet)
-            session.commit()
-            helpers.generate_table(name, sheet.id, engine)
+            helpers.generate_table(new_sheet_form, engine)
             return redirect(url_for('index'))
         elif delete_form.submit_delete.data and delete_form.validate():
             helpers.user_deletes_table(sheets, request)
@@ -59,12 +55,7 @@ def view_sheet(sheet_name):
     generated_table = Table("table_{}".format(sheet.id), meta, autoload=True)
 
     if request.method == 'POST':
-        table_values = {}
-        for index, value in enumerate(request.form.getlist("add_records")):
-            table_values['col_{}'.format(schema[index].id)] = value
-        ins = generated_table.insert().values(table_values)
-        conn = engine.connect()
-        result = conn.execute(ins)
+        helpers.user_adds_data(generated_table, schema, request, engine)
         return redirect(url_for('view_sheet', sheet_name=sheet_name))
 
     # Make sure to close the session after querying the generated table,
