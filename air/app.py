@@ -54,21 +54,24 @@ def view_sheet(sheet_name):
     data.
     """
     sheet = session.query(models.Sheets).filter_by(sheet_name=sheet_name).first()
-    schema = session.query(models.Sheets_Schema).filter(models.Sheets_Schema.sheet_id==sheet.id)
+    schema = session.query(models.Sheets_Schema).filter(models.Sheets_Schema.sheet_id==sheet.id).all()
     meta = MetaData(bind=engine)
-    generated_table = Table("table_{}".format(
-        sheet.id), meta, autoload=True)
+    generated_table = Table("table_{}".format(sheet.id), meta, autoload=True)
 
     if request.method == 'POST':
         table_values = {}
-        for c, i in enumerate(request.form.getlist("add_records")):
-            table_values['col_{}'.format(c)] = i
+        for index, value in enumerate(request.form.getlist("add_records")):
+            table_values['col_{}'.format(schema[index].id)] = value
         ins = generated_table.insert().values(table_values)
         conn = engine.connect()
         result = conn.execute(ins)
         return redirect(url_for('view_sheet', sheet_name=sheet_name))
 
+    # Make sure to close the session after querying the generated table,
+    # otherwise the session keeps a lock on table for some reason.
     contents = session.query(generated_table).all()
+    session.close()
+
     contents = helpers.format_user_data(contents)
 
     return render_template('view_sheet.html',
