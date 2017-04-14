@@ -39,9 +39,12 @@ if (typeof(new_column_button) != 'undefined' && new_column_button != null) {
 }
 
 for (i = 0, len = edit_column_buttons.length; i < len; i++) {
+	// loop through all of the edit_column_buttons and assign the onclick function
+	// seems hacky, but then again I don't like javascript.
 	edit_column_buttons[i].onclick = function() {
+		console.log(this.value);
 		document.getElementById('edit_column_old_name').value = this.value;
-		document.getElementById('col_to_alter').value = this.value;
+		document.getElementById('col_to_alter').value = document.getElementById("clicked_column_" + this.value).value;
 		toggle_well('edit_column_well');
 	}
 }

@@ -56,6 +56,26 @@ def user_removes_columns(sheet, schema, request):
     col_to_delete = session.query(models.Sheets_Schema).filter_by(id=col_to_delete_id).delete()
     session.commit()
 
+def user_alters_column(edit_form, sheet, request):
+    """
+    def upgrade(migrate_engine):
+        meta = MetaData(bind=migrate_engine)
+        users = Table('users', meta, autoload=True)
+        users.c.user_id.alter(name='id')
+
+    from sqlalchemy import update
+
+    stmt = update(users).where(users.c.id==5).\
+            values(name='user #5')
+
+    """
+    col_to_alter_id = request.form.getlist("col_to_alter")[0]
+    col = session.query(models.Sheets_Schema).filter_by(id=col_to_alter_id).one()
+    col.column_name = edit_form.column_name.data
+    session.commit()
+    #table = sqlalchemy.Table("table_{}".format(sheet.id), metadata, autoload=True)
+
+
 def user_deletes_table(sheets, request):
     sheet_to_drop_id = request.form.getlist("sheet_to_drop")[0]
     generate_table = sqlalchemy.Table("table_{}".format(sheet_to_drop_id), metadata).drop()

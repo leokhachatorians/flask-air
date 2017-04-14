@@ -8,7 +8,7 @@ import wtforms
 
 class NewSheetForm(Form):
     sheet_name = StringField('Sheet Name',
-            [validators.Length(min=3, max=25), validators.DataRequired()],
+            [validators.Length(min=1, max=25), validators.DataRequired()],
             render_kw={
                 "placeholder": "People",
                 "class": "form-control"})
@@ -19,7 +19,7 @@ class NewSheetForm(Form):
 
 class AddColumnForm(Form):
     column_name = StringField('Column Name',
-            [validators.Length(min=3, max=25), validators.DataRequired()],
+            [validators.Length(min=1, max=25), validators.DataRequired()],
             render_kw={
                 "placeholder": "Name",
                 "class": "form-control"})
@@ -36,7 +36,7 @@ class AddColumnForm(Form):
 
 class EditColumnForm(Form):
     column_name = StringField('New Column Name',
-            [validators.Length(min=3, max=25), validators.DataRequired()],
+            [validators.Length(min=1, max=25), validators.DataRequired()],
             render_kw={
                 "placeholder": "Name",
                 "class": "form-control"})

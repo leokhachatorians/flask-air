@@ -109,9 +109,9 @@
                   <tr>
                     <td></td>
                     <td class="form-inline">
-                      {{ edit_form.submit_edit_column }}
-                      <button id="cancel_edit_column_button" type="button" class="btn btn-s btn-default" style="margin-bottom: 0; margin-left: 10px">Cancel</button>
-                      <input id="col_to_alter" type="hidden" name="col_to_alter">
+                        {{ edit_form.submit_edit_column }}
+                        <button id="cancel_edit_column_button" type="button" class="btn btn-s btn-default" style="margin-bottom: 0; margin-left: 10px">Cancel</button>
+                        <input id="col_to_alter" type="hidden" name="col_to_alter" value="" >
                     </td>
                   </tr>
                 </tbody>
@@ -147,14 +147,14 @@
                         type="button" class="btn btn-xs btn-success"
                         style="margin-bottom: 0;">Edit</button>
                       {{ delete_form.submit_delete }}
-                      <input type="hidden" id="clicked_column" name="to_delete" value="{{ i.id }}">
+                      <input type="hidden" id="clicked_column_{{ i.column_name }}" name="to_delete" value="{{ i.id }}">
                     </form>
                   </td>
                 </tr>
                 {% endfor %}
-              </tbody>
+              </ tbody>
             </table>
-        </div>
+        </div> 
       </div>
       <!-- End of Table of Column Info -->
     </div>
