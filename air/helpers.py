@@ -127,13 +127,9 @@ def user_removes_columns(sheet, schema, request):
         session.commit()
 
 def user_deletes_table(sheets, request):
-    found = None
-    for sheet in sheets:
-        if sheet.sheet_name == request.form.getlist("sheet_to_drop")[0]:
-            found = sheet
-            generated_table = sqlalchemy.Table("table_{}".format(sheet.id), metadata).drop()
-            break
-    session.query(models.Sheets).filter_by(id=found.id).delete()
+    sheet_to_drop_id = request.form.getlist("sheet_to_drop")[0]
+    generate_table = sqlalchemy.Table("table_{}".format(sheet_to_drop_id), metadata).drop()
+    session.query(models.Sheets).filter_by(id=sheet_to_drop_id).delete()
     session.commit()
 
 def format_user_data(data):
