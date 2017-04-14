@@ -36,7 +36,7 @@ def index():
             sheet = models.Sheets(1, name)
             session.add(sheet)
             session.commit()
-            helpers.generate_table_test(name, sheet.id, engine)
+            helpers.generate_table(name, sheet.id, engine)
             return redirect(url_for('index'))
         elif delete_form.submit_delete.data and delete_form.validate():
             helpers.user_deletes_table(sheets, request)
