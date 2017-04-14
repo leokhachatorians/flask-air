@@ -54,4 +54,3 @@ if (typeof(cancel_edit_button) != 'undefined' && cancel_edit_button != null) {
 		toggle_well('edit_column_well');
 	};
 }
-
