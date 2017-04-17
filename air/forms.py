@@ -6,6 +6,15 @@ from wtforms.widgets import CheckboxInput, SubmitInput
 
 import wtforms
 
+class Base():
+    column_type_choices = [
+                ('String', 'Text'), ('Text', 'Long Text'),
+                ('Text', 'Select'), ('Boolean', 'Check Box'),
+                ('Date', 'Date'), ('Text', 'Record'),
+                ('Float', 'Currency'), ('Float', 'Number'),
+                ('DateTime', 'Timestamp'), ('BigInteger', 'Integer'),
+                ('String', 'Time')]
+
 class NewSheetForm(Form):
     sheet_name = StringField('Sheet Name',
             [validators.Length(min=1, max=25), validators.DataRequired()],
@@ -18,7 +27,7 @@ class NewSheetForm(Form):
                 'class': 'btn btn-s btn-primary',
                 'style': 'margin-bottom: 0;'})
 
-class AddColumnForm(Form):
+class AddColumnForm(Form, Base):
     column_name = StringField('Column Name',
             [validators.Length(min=1, max=25), validators.DataRequired()],
             render_kw={
@@ -26,13 +35,7 @@ class AddColumnForm(Form):
                 "class": "form-control"})
 
     types = SelectField('Type',
-            choices=[
-                ('String', 'Text'), ('Text', 'Long Text'),
-                ('Text', 'Select'), ('Boolean', 'Check Box'),
-                ('Date', 'Date'), ('Text', 'Record'),
-                ('Float', 'Currency'), ('Float', 'Number'),
-                ('DateTime', 'Timestamp'), ('BigInteger', 'Integer'),
-                ('String', 'Time')],
+            choices = Base.column_type_choices,
             render_kw={"class": "form-control",})
 
     submit_add_column = SubmitField('Add',
@@ -60,7 +63,7 @@ class EditColumnForm(Form):
                 "class": "form-control"})
 
     types = SelectField('Type',
-            choices=[('text', 'Text'), ('bytea', 'File/Picture')],
+            choices=Base.column_type_choices,
             render_kw={"class": "form-control",})
 
     submit_edit_column = SubmitField('Add',
@@ -72,6 +75,5 @@ class BaseDeleteForm(Form):
     submit_delete = SubmitField('Delete',
             render_kw={
                 "class":"btn btn-xs btn-danger",
-                "value": "Delete",
                 "style": "margin-bottom: 0",
                 })

@@ -56,12 +56,6 @@
                     <td>{{ add_form.types }}</td>
                   </tr>
                   <tr>
-                    <td style="vertical-align: middle;"><label class="col-lg-2 control-label" for="checkbox-null">Nullable</label></td>
-                    <td>
-                      <input type="checkbox" value="option1" id="checkbox-null">
-                    </td>
-                  </tr>
-                  <tr>
                     <td></td>
                     <td class="form-inline">
                       {{ add_form.submit_add_column }}
@@ -79,32 +73,26 @@
       <!-- Edit Column Well -->
       <form method="POST">
         <div id="edit_column_well" class="ibox-content col-lg-12" style="display: none;">
-          <div class="well col-lg-3">
+          <div class="well col-lg-6">
             <form role="form" class="form-inline">
               <table class="table">
                 <thead>
                   <tr>
-                    <th colspan="3" style="text-align: center;"><h3 id="edit_column_header">Edit Column &#60;column&#62;</h3></th>
+                    <th colspan="3" style="text-align: center;"><h3 id="edit_column_header">Edit Column</h3></th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td style-"vertical-align: middle;"><label class="col-lg-2 control-label">Old Name</label></td>
                     <td><input type="text" id="edit_column_old_name" class="form-control" value="placeholder" disabled></td>
-                  </tr>
-                  <tr>
                     <td style="vertical-align: middle;"><label class="col-lg-2 control-label">New Name</label></td>
                     <td>{{ edit_form.column_name }}</td>
                   </tr>
                   <tr>
+                    <td style="vertical-align: middle;"><label class="col-lg-3 control-label">Old Type</label></td>
+                    <td><input type="text" id="edit_column_old_type" class="form-control" value="placeholder" disabled></td>
                     <td style="vertical-align: middle;"><label class="col-lg-2 control-label">Type</label></td>
                     <td>{{ edit_form.types }}</td>
-                  </tr>
-                  <tr>
-                    <td style="vertical-align: middle;"><label class="col-lg-2 control-label" for="checkbox-null">Nullable</label></td>
-                    <td>
-                      <input type="checkbox" value="option1" id="checkbox-null">
-                    </td>
                   </tr>
                   <tr>
                     <td></td>
@@ -144,10 +132,11 @@
                   <td>
                     <form method="POST">
                       <button id="edit_column_button_{{ loop.index0 }}" value="{{ i.column_name }}" 
-                        type="button" class="btn btn-xs btn-success"
+                        type="button" class="btn btn-xs btn-success test"
                         style="margin-bottom: 0;">Edit</button>
                       {{ delete_form.submit_delete }}
-                      <input type="hidden" id="clicked_column_{{ i.column_name }}" name="to_delete" value="{{ i.id }}">
+                      <input type="hidden" id="clicked_column_name_{{ i.column_name }}" name="to_delete" value="{{ i.id }}">
+                      <input type="hidden" id="clicked_column_type_{{ loop.index0 }}"  value="{{ i.column_type }}">
                     </form>
                   </td>
                 </tr>

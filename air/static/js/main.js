@@ -38,16 +38,17 @@ if (typeof(new_column_button) != 'undefined' && new_column_button != null) {
 	};
 }
 
-for (i = 0, len = edit_column_buttons.length; i < len; i++) {
-	// loop through all of the edit_column_buttons and assign the onclick function
-	// seems hacky, but then again I don't like javascript.
+for (var i = 0; i < edit_column_buttons.length; i++) (function(i) {
 	edit_column_buttons[i].onclick = function() {
-		console.log(this.value);
+		var id_tag = "edit_column_button_" + i;
+		var old_type = id_tag.replace(id_tag, "clicked_column_type_" + i);
 		document.getElementById('edit_column_old_name').value = this.value;
-		document.getElementById('col_to_alter').value = document.getElementById("clicked_column_" + this.value).value;
+		document.getElementById('edit_column_header').innerText = "Edit Column <" + this.value + ">";
+		document.getElementById('col_to_alter').value = document.getElementById("clicked_column_name_" + this.value).value;
+		document.getElementById("edit_column_old_type").value = document.getElementById(old_type).value;
 		toggle_well('edit_column_well');
 	}
-}
+})(i);
 
 if (typeof(cancel_edit_button) != 'undefined' && cancel_edit_button != null) {
 	cancel_edit_button.onclick = function() {

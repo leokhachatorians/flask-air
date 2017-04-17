@@ -94,7 +94,6 @@ def modify_sheet(sheet_name):
             helpers.user_removes_columns(sheet, schema, request)
         elif edit_form.submit_edit_column.data and edit_form.validate():
             helpers.user_alters_column(edit_form, sheet, request)
-
         return redirect(url_for('modify_sheet', sheet_name=sheet_name))
     return render_template('modify_sheet.html',
             schema=schema, add_form=add_form,
