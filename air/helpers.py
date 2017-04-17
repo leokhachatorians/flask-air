@@ -31,8 +31,7 @@ def user_adds_data(generated_table, schema, request, engine):
     for index, value in enumerate(request.form.getlist("add_records")):
         table_values['col_{}'.format(schema[index].id)] = value
     ins = generated_table.insert().values(table_values)
-    conn = engine.connect()
-    result = conn.execute(ins)
+    engine.connect().execute(ins)
 
 def user_adds_column(form, sheet, schema):
     """Adds a user-defined column
@@ -86,6 +85,10 @@ def user_alters_column(edit_form, sheet, request):
     col_to_alter_id = request.form.getlist("col_to_alter")[0]
     col = session.query(models.Sheets_Schema).filter_by(id=col_to_alter_id).one()
     col.column_name = edit_form.column_name.data
+
+def user_deletes_row(generated_table, row_id, engine):
+    ins = generated_table.delete().where(generated_table.c.id==row_id)
+    engine.connect().execute(ins)
 
 def user_deletes_table(sheets, request):
     """Deletes a user generated tabled

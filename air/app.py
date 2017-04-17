@@ -53,9 +53,14 @@ def view_sheet(sheet_name):
     schema = session.query(models.Sheets_Schema).filter(models.Sheets_Schema.sheet_id==sheet.id).all()
     meta = MetaData(bind=engine)
     generated_table = Table("table_{}".format(sheet.id), meta, autoload=True)
+    add_form = forms.AddDataForm(request.form)
+    delete_form = forms.DeleteDataForm(request.form)
 
     if request.method == 'POST':
-        helpers.user_adds_data(generated_table, schema, request, engine)
+        if add_form.submit_add_data.data and add_form.validate():
+            helpers.user_adds_data(generated_table, schema, request, engine)
+        elif delete_form.submit_delete_row.data and delete_form.validate():
+            helpers.user_deletes_row(generated_table, request.form.getlist('row_id')[0], engine)
         return redirect(url_for('view_sheet', sheet_name=sheet_name))
 
     # Make sure to close the session after querying the generated table,
@@ -63,11 +68,10 @@ def view_sheet(sheet_name):
     contents = session.query(generated_table).all()
     session.close()
 
-    contents = helpers.format_user_data(contents)
-
     return render_template('view_sheet.html',
             schema=schema, sheet_name=sheet_name,
-            contents=contents)
+            contents=contents, add_form=add_form,
+            delete_form=delete_form)
 
 @app.route('/modify_sheet/<sheet_name>', methods=['GET', 'POST'])
 def modify_sheet(sheet_name):

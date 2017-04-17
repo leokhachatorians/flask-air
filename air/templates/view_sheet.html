@@ -17,7 +17,7 @@
       {% for i in schema %}
         <input type="text" name="add_records" placeholder="{{ i.column_name }}" value="">
       {% endfor %}
-      <input type="submit" value="Add">
+      {{ add_form.submit_add_data }}
     </form>
 
 
@@ -34,12 +34,16 @@
           </tr>
         </thead>
         <tbody>
-          {% for i in contents %}
-            <tr>
-              {% for j in i %}
-                <td>{{ j }}</td>
-              {% endfor %}
-            </tr>
+          {% for chunk in contents %}
+            <form method="POST">
+              <tr>
+                <input type="hidden" name="row_id" value="{{ chunk[0] }}">
+                {% for column in chunk[1:] %}
+                  <td>{{ column }}</td>
+                {% endfor %}
+                <td>{{ delete_form.submit_delete_row }}</td>
+              </tr>
+            </form>
           {% endfor %}
         </tbody>
       </table>
