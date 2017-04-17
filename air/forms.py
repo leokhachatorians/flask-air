@@ -66,7 +66,7 @@ class EditColumnForm(Form):
             choices=Base.column_type_choices,
             render_kw={"class": "form-control",})
 
-    submit_edit_column = SubmitField('Add',
+    submit_edit_column = SubmitField('Save',
             render_kw={
                 "class": "btn btn-s btn-success",
                 "style": "margin-bottom: 0;"})

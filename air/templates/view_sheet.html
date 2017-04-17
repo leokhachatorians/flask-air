@@ -20,13 +20,13 @@
       {{ add_form.submit_add_data }}
     </form>
 
-
     <div class="ibox-content">
       <div class="table-responsive">
         <div role="status" aria-live="polite" style="padding-bottom: 8px;">Showing 1 to 14 of 14 Entries</div>
       <table class="table table-striped table-bordered table-hover dataTables-example">
         <thead>
-          <tr>
+          <tr id="table_head">
+            <th width="5" style="border-right-style: hidden;"></th>
             {% for i in schema %}
             <th>{{ i.column_name }}</th>
             {% endfor %}
@@ -36,7 +36,12 @@
         <tbody>
           {% for chunk in contents %}
             <form method="POST">
-              <tr>
+              <tr id="row_{{ loop.index0 }}">
+                <td width="5" style="border-right-style: hidden;">
+                  <span class="hide-icon" id="expand_icon_{{ loop.index0 }}">
+                    <i class="fa fa-expand icon"></i>
+                  </span>
+                </td>
                 <input type="hidden" name="row_id" value="{{ chunk[0] }}">
                 {% for column in chunk[1:] %}
                   <td>{{ column }}</td>
@@ -50,5 +55,9 @@
       </div>
     </div>
 
-    <div id="input_row_button" role="status" aria-live="polite" style="padding-bottom: 8px;">+</div>
+    <div id="input_row_button" role="status" aria-live="polite" style="padding-bottom: 8px;"></div>
 {% endblock content %}
+
+{% block unique_scripts %}
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% endblock unique_scripts %}

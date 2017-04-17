@@ -85,6 +85,7 @@ def user_alters_column(edit_form, sheet, request):
     col_to_alter_id = request.form.getlist("col_to_alter")[0]
     col = session.query(models.Sheets_Schema).filter_by(id=col_to_alter_id).one()
     col.column_name = edit_form.column_name.data
+    session.commit()
 
 def user_deletes_row(generated_table, row_id, engine):
     ins = generated_table.delete().where(generated_table.c.id==row_id)

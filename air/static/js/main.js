@@ -18,6 +18,8 @@ var edit_column_button = document.getElementById('edit_column_button');
 var cancel_edit_button = document.getElementById('cancel_edit_column_button');
 var edit_column_buttons = [].slice.call(document.querySelectorAll('[id^=edit_column_button_]'));
 
+var sheet_rows = [].slice.call(document.querySelectorAll('[id^=row_]'));
+
 if (typeof(new_table_button) != 'undefined' && new_table_button != null) {
 	new_table_button.onclick = function() {
 		toggle_well('create_table_well');
@@ -49,6 +51,19 @@ for (var i = 0; i < edit_column_buttons.length; i++) (function(i) {
 		toggle_well('edit_column_well');
 	}
 })(i);
+
+for (var i = 0; i < sheet_rows.length; i++) (function(i) {
+	sheet_rows[i].addEventListener("mouseover", function(e) {
+		document.getElementById('row_' + i).classList.toggle('test');
+		document.getElementById('expand_icon_'+i).classList.toggle('hide-icon');
+	}, false);
+
+	sheet_rows[i].addEventListener("mouseout", function(e) {
+		document.getElementById('row_' + i).classList.toggle('test');
+		document.getElementById('expand_icon_'+i).classList.toggle('hide-icon');
+	}, false);
+})(i);
+
 
 if (typeof(cancel_edit_button) != 'undefined' && cancel_edit_button != null) {
 	cancel_edit_button.onclick = function() {
