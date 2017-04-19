@@ -1,5 +1,3 @@
-#from app import db
-#db.create_all()
 from models import Base
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy.orm import sessionmaker, Session

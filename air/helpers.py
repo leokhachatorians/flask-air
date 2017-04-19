@@ -46,8 +46,9 @@ def user_adds_column(form, sheet, schema):
     """
     schema_objects = schema.all()
     sequence_number = 0
-    if len(schema_objects) > 0:
-        sequence_number = schema_objects[-1].sequence_number + 1
+    for _ in schema_objects:
+        if _.sequence_number > sequence_number:
+            sequence_number = _.sequence_number + 1
 
     new_col = models.Sheets_Schema(
             sheet, form.column_name.data,

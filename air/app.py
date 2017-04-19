@@ -26,6 +26,9 @@ app.config.from_envvar('AIR_SETTINGS', silent=True)
 
 import forms, helpers, models
 
+schema_store = DTSchemaStoreSQL(session)
+
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     # hard coding user id for the time being
@@ -59,9 +62,7 @@ def view_sheet(sheet_name):
     add_form = forms.AddDataForm(request.form)
     delete_form = forms.DeleteDataForm(request.form)
 
-    test = DTSchemaStoreSQL(session)
-    t = test.get_schema(sheet.id, sheet.sheet_name)
-    print(t._list_table())
+    dtable = schema_store.get_schema(sheet.id, sheet.sheet_name)
 
     if request.method == 'POST':
         if add_form.submit_add_data.data and add_form.validate():
@@ -76,7 +77,7 @@ def view_sheet(sheet_name):
     session.close()
 
     return render_template('view_sheet.html',
-            schema=schema, sheet_name=sheet_name,
+            schema=dtable.columns, sheet_name=sheet_name,
             contents=contents, add_form=add_form,
             delete_form=delete_form)
 
@@ -94,6 +95,8 @@ def modify_sheet(sheet_name):
     sheet = session.query(models.Sheets).filter_by(sheet_name=sheet_name).first()
     schema = session.query(models.Sheets_Schema).filter(models.Sheets_Schema.sheet_id==sheet.id)
 
+    dtable = schema_store.get_schema(sheet.id, sheet.sheet_name)
+
     if request.method == 'POST':
         if add_form.submit_add_column.data and add_form.validate():
             helpers.user_adds_column(add_form, sheet, schema)
@@ -103,7 +106,7 @@ def modify_sheet(sheet_name):
             helpers.user_alters_column(edit_form, sheet, request)
         return redirect(url_for('modify_sheet', sheet_name=sheet_name))
     return render_template('modify_sheet.html',
-            schema=schema, add_form=add_form,
+            schema=dtable.columns, add_form=add_form,
             delete_form=delete_form, edit_form=edit_form,
             sheet_name=sheet_name)
 

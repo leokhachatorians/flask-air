@@ -25,6 +25,5 @@ class DTSchemaStoreSQL(DTSchema):
             dt_columns.append(DTColumn(col.id, col.column_name, col.column_type))
         return DTable(table_id, table_name, dt_columns)
 
-
     def set_schema(self, table_name, table):
         pass
