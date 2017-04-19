@@ -136,6 +136,7 @@
                         style="margin-bottom: 0;">Edit</button>
                       {{ delete_form.submit_delete }}
                       <input type="hidden" id="clicked_column_name_{{ i.column_name }}" name="to_delete" value="{{ i.id }}">
+                      <input type="hidden" name="to_delete_seq_num" value="{{ i.sequence_number }}">
                       <input type="hidden" id="clicked_column_type_{{ loop.index0 }}"  value="{{ i.column_type }}">
                     </form>
                   </td>

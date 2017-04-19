@@ -47,12 +47,14 @@ class Sheets_Schema(Base):
             backref=backref('sheets_schema', lazy='dynamic', cascade='all, delete-orphan'))
     column_name = Column(String(150), unique=True)
     column_type = Column(String(80))
+    sequence_number = Column(Integer)
 
-    def __init__(self, sheet, column_name, column_type):
+    def __init__(self, sheet, column_name, column_type, sequence_number):
         self.sheet = sheet
         self.column_name = column_name
         self.column_type = column_type
+        self.sequence_number = sequence_number
 
     def __repr__(self):
-        return "<Sheets_Schema {} {} {}>".format(
-                self.sheet, self.column_name, self.column_type,)
+        return "<Sheets_Schema {} {} {} {}>".format(
+                self.sheet, self.column_name, self.column_type, self.sequence_number)

@@ -44,10 +44,14 @@ def user_adds_column(form, sheet, schema):
     After that, we need to create a reference to the generated table,
     create a column, and then create it via sqlalchemy-migrate.
     """
+    schema_objects = schema.all()
+    sequence_number = 0
+    if len(schema_objects) > 0:
+        sequence_number = schema_objects[-1].sequence_number + 1
 
     new_col = models.Sheets_Schema(
             sheet, form.column_name.data,
-            form.types.data)
+            form.types.data, sequence_number)
 
     current_session = session.object_session(new_col)
     current_session.add(new_col)
@@ -67,11 +71,21 @@ def user_removes_columns(sheet, schema, request):
 
     We can then delete the entry in sheets_schema and then have
     sqlalchemy-migrate drop the column via our "housing" table.
+
+    Afterwards, we iterate over all the columns and adjust the sequence numbers
+    before we actually delete the column in our schema table.
     """
     col_to_delete_id = request.form.getlist("to_delete")[0]
+    col_to_delete_sequence_num = request.form.getlist("to_delete_seq_num")[0]
     generated_table = sqlalchemy.Table("table_{}".format(sheet.id), metadata)
     generated_col_to_delete = sqlalchemy.Column("col_{}".format(col_to_delete_id))
     generated_col_to_delete.drop(generated_table)
+
+
+    for col in session.query(models.Sheets_Schema).filter_by(sheet_id=sheet.id).all():
+        if col.sequence_number > int(col_to_delete_sequence_num):
+            col.sequence_number -= 1
+
     col_to_delete = session.query(models.Sheets_Schema).filter_by(id=col_to_delete_id).delete()
     session.commit()
 
