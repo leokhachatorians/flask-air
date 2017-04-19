@@ -7,6 +7,8 @@ from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy import Table, MetaData
 from initdb import session, metadata, engine
 import sqlalchemy
+from backend.dtable import DTable
+from backend.dt_column import DTColumn
 
 app = Flask(__name__)
 app.config.from_object(__name__)
