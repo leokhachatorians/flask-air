@@ -1,8 +1,13 @@
-class DTColumnTypeInteger():
+class DTColumnType():
+    """Empty Abstract Base
+    """
     pass
 
-class DTColumnTypeString():
+class DTColumnTypeInteger(DTColumnType):
     pass
 
-class DTColumnTypeText():
+class DTColumnTypeString(DTColumnType):
+    pass
+
+class DTColumnTypeText(DTColumnType):
     pass

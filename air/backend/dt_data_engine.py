@@ -1,7 +1,12 @@
-class DTDataEngineJSON():
+class DTDataEngine():
+    """Empty Abstract Base
+    """
     pass
 
-class DTDataEngineSQL():
+class DTDataEngineJSON(DTDataEngine):
+    pass
+
+class DTDataEngineSQL(DTDataEngine):
     def __init__(self):
         pass
 

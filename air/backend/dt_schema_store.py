@@ -1,7 +1,12 @@
-class DTSchemaStoreJSON():
+class DTSchema():
+    """Empty Abstract Base
+    """
     pass
 
-class DTSchemaStoreSQL():
+class DTSchemaStoreJSON(DTSchema):
+    pass
+
+class DTSchemaStoreSQL(DTSchema):
     def __init__(self, id_, name):
         self.id_ = id_
         self.name = name
