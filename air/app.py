@@ -63,6 +63,7 @@ def view_sheet(sheet_name):
     delete_form = forms.DeleteDataForm(request.form)
 
     dtable = schema_store.get_schema(sheet.id, sheet.sheet_name)
+    dtable._add_column('T1', 'Text')
 
     if request.method == 'POST':
         if add_form.submit_add_data.data and add_form.validate():
