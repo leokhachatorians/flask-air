@@ -17,7 +17,9 @@ class DTable():
         self.columns = columns
         self._set_table_info()
 
-    def _add_column(self, name, type_):
+    def _add_column(self, form):
+        name = form.column_name.data
+        type_ = form.types.data
         try:
             self.info['columns'][name]
             return False

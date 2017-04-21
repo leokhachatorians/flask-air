@@ -101,20 +101,17 @@ def modify_sheet(sheet_name):
 
     if request.method == 'POST':
         if add_form.submit_add_column.data and add_form.validate():
-            result = dtable._add_column(add_form.column_name.data, add_form.types.data)
-            if result:
+            if dtable._add_column(add_form):
                 schema_store.set_schema(dtable, schema, sheet, 'add')
             else:
                 print('duplicate column name')
         elif delete_form.submit_delete.data and delete_form.validate():
-            result = dtable._remove_column(request)
-            if result:
+            if dtable._remove_column(request):
                 schema_store.set_schema(dtable, schema, sheet, 'remove')
             else:
                 print('invalid col id')
         elif edit_form.submit_edit_column.data and edit_form.validate():
-            result = dtable._alter_column(edit_form, request)
-            if result:
+            if dtable._alter_column(edit_form, request):
                 schema_store.set_schema(dtable, schema, sheet, 'alter')
             else:
                 print('invalid')
