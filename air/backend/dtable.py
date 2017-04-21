@@ -28,10 +28,11 @@ class DTable():
             self.info['modifications']['new']['type'] = type_
             return True
 
-    def _alter_column(self, name, type_):
+    def _alter_column(self, form, request):
         try:
-            self.info['modifications']['altered']['name'] = name
-            self.info['modifications']['altered']['type'] = type_
+            self.info['modifications']['altered']['name'] = form.column_name.data
+            self.info['modifications']['altered']['type'] = form.types.data
+            self.info['modifications']['altered']['id'] = request.form.getlist('col_to_alter')[0]
             return True
         except KeyError:
             return False

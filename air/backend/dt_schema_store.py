@@ -73,4 +73,8 @@ class DTSchemaStoreSQL(DTSchema):
         self.session.commit()
 
     def _alter_column(self, dtable, sheet):
-        pass
+        col_to_alter_id = dtable.info['modifications']['altered']['id']
+        col = self.session.query(models.Sheets_Schema).filter_by(id=col_to_alter_id).one()
+        col.column_name = dtable.info['modifications']['altered']['name']
+        col.column_type = dtable.info['modifications']['altered']['type']
+        self.session.commit()

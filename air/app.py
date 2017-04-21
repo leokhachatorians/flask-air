@@ -113,7 +113,12 @@ def modify_sheet(sheet_name):
             else:
                 print('invalid col id')
         elif edit_form.submit_edit_column.data and edit_form.validate():
-            helpers.user_alters_column(edit_form, sheet, request)
+            result = dtable._alter_column(edit_form, request)
+            if result:
+                schema_store.set_schema(dtable, schema, sheet, 'alter')
+            else:
+                print('invalid')
+            #helpers.user_alters_column(edit_form, sheet, request)
         return redirect(url_for('modify_sheet', sheet_name=sheet_name))
     return render_template('modify_sheet.html',
             schema=dtable.columns, add_form=add_form,
