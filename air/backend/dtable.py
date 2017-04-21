@@ -18,9 +18,6 @@ class DTable():
 
         self._set_table_info()
 
-    def _remove_column(self):
-        pass
-
     def _add_column(self, name, type_):
         try:
             self.table_info['columns'][name]
@@ -29,12 +26,23 @@ class DTable():
         except KeyError:
             self.table_info['modifications']['new']['name'] = name
             self.table_info['modifications']['new']['type'] = type_
-        print(self._list_table())
 
     def _alter_column(self):
+
+        pass
+
+    def _remove_column(self):
         pass
 
     def _set_table_info(self):
+        """Sets up the internal dictionary to be consumed
+
+        The table_info dictionary is essentially the vehicle used to
+        transport the information held by the DTable to 'DT Schema Store'.
+        It contains basic information about what table to operate on, as well
+        as what columns need to be altered, deleted, or created.
+        """
+
         self.table_info = {
             'table_name': self.name,
             'table_id': self.id_,
