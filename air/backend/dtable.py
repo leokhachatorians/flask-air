@@ -1,4 +1,6 @@
 import pprint
+from .dt_column import DTColumn
+from .excp.duplicate_column import DuplicateColumnException
 
 class DTable():
     def __init__(self, id_, name, columns):
@@ -12,23 +14,37 @@ class DTable():
         pass
 
     def _add_column(self, name, type_):
-        if name in self.table_info['column_names']:
-            print('duplicate')
-        else: print('unique')
+        try:
+            self.table_info['columns'][name]
+            raise DuplicateColumnException(
+                self.id_, self.table_info['columns'][name].column_id, name)
+        except KeyError:
+            self.table_info['modifications']['new']['name'] = name
+            self.table_info['modifications']['new']['type'] = type_
+            print(self.table_info)
 
     def _alter_column(self):
         pass
 
     def _set_table_info(self):
         self.table_info = {
-                'table_name': self.name,
-                'table_id': self.id_,
-                'columns': [],
-                'column_names': [],
+            'table_name': self.name,
+            'table_id': self.id_,
+            'columns': {},
+            'modifications': {
+                'new': {
+                    'name': None,
+                    'type': None,
+                },
+                'altered': {
+                    'name': None,
+                    'type': None,
+                },
+                'deleted': None,
+            }
         }
         for column in self.columns:
-            self.table_info['columns'].append("{}".format(column))
-            self.table_info['column_names'].append(column.column_name)
+            self.table_info['columns'][column.column_name] = column
 
     def _list_table(self):
         pp = pprint.PrettyPrinter(indent=4)

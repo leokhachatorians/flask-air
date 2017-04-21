@@ -10,6 +10,10 @@ class DTColumn():
     def _edit_type(self, new_type):
         self.column_type = new_type
 
+    def __repr__(self):
+        return "Name: {}, Type: {}, ID: {}".format(
+                self.column_name, self.column_type, self.column_id)
+
     def __str__(self):
-        return "<Name: {}>, <Type: {}>, <ID: {}>".format(
+        return "Name: {}, Type: {}, ID: {}".format(
                 self.column_name, self.column_type, self.column_id)
