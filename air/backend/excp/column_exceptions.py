@@ -1,4 +1,8 @@
-class DuplicateColumnException(BaseException):
+class ColumnException(BaseException):
+    """Base exception for column related exceptions"""
+    pass
+
+class DuplicateColumnException(ColumnException):
     """For when the column name already exists in the table"""
     def __init__(self, table_id, column_id, column_name):
         self.table_id = table_id

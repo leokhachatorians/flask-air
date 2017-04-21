@@ -1,8 +1,16 @@
 import pprint
 from .dt_column import DTColumn
-from .excp.duplicate_column import DuplicateColumnException
+from .excp.column_exceptions import DuplicateColumnException
 
 class DTable():
+    """Container for a users table
+
+    Sole purpose of the DTable class is to be a bridge between the database and
+    the user. Whenever the user wishes to modify their table in any matter, it
+    first is modified here. The DTable will then be consumed by the 'DT Schema Store'
+    which is in charge of actually modifying the meta-schema of the table in the
+    actual database.
+    """
     def __init__(self, id_, name, columns):
         self.id_ = id_
         self.name = name
@@ -21,7 +29,7 @@ class DTable():
         except KeyError:
             self.table_info['modifications']['new']['name'] = name
             self.table_info['modifications']['new']['type'] = type_
-            print(self.table_info)
+        print(self._list_table())
 
     def _alter_column(self):
         pass
