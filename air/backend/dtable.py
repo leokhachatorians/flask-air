@@ -36,9 +36,9 @@ class DTable():
         except KeyError:
             return False
 
-    def _remove_column(self, name):
+    def _remove_column(self, request):
         try:
-            self.info['modifications']['deleted']['name'] = name
+            self.info['modifications']['deleted']['id'] = request.form.getlist('to_delete')[0]
             return True
         except KeyError:
             return False
@@ -66,7 +66,7 @@ class DTable():
                     'type': None,
                 },
                 'deleted': {
-                    'name': None,
+                    'id': None,
                 },
             }
         }

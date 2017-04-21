@@ -103,11 +103,15 @@ def modify_sheet(sheet_name):
         if add_form.submit_add_column.data and add_form.validate():
             result = dtable._add_column(add_form.column_name.data, add_form.types.data)
             if result:
-                schema_store.set_schema(dtable, schema, sheet)
+                schema_store.set_schema(dtable, schema, sheet, 'add')
             else:
                 print('duplicate column name')
         elif delete_form.submit_delete.data and delete_form.validate():
-            helpers.user_removes_columns(sheet, schema, request)
+            result = dtable._remove_column(request)
+            if result:
+                schema_store.set_schema(dtable, schema, sheet, 'remove')
+            else:
+                print('invalid col id')
         elif edit_form.submit_edit_column.data and edit_form.validate():
             helpers.user_alters_column(edit_form, sheet, request)
         return redirect(url_for('modify_sheet', sheet_name=sheet_name))
