@@ -10,7 +10,7 @@ import sqlalchemy
 from backend.dtable import DTable
 from backend.dt_column import DTColumn
 from backend.dt_schema_store import DTSchemaStoreSQL
-from backend.excp.column_exceptions import DuplicateColumnException
+from backend.excp.column_exceptions import DuplicateColumn
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -64,10 +64,12 @@ def view_sheet(sheet_name):
     delete_form = forms.DeleteDataForm(request.form)
 
     dtable = schema_store.get_schema(sheet.id, sheet.sheet_name)
-    try:
-        dtable._add_column('T3', 'Text')
-    except DuplicateColumnException as e:
-        print(e)
+    result = dtable._add_column('T3', 'Text')
+
+    if result == True:
+        print('added')
+    else:
+        print('didnt add')
 
     if request.method == 'POST':
         if add_form.submit_add_data.data and add_form.validate():

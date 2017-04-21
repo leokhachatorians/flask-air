@@ -1,6 +1,6 @@
 import pprint
 from .dt_column import DTColumn
-from .excp.column_exceptions import DuplicateColumnException
+from .excp.column_exceptions import DuplicateColumn
 
 class DTable():
     """Container for a users table
@@ -21,18 +21,26 @@ class DTable():
     def _add_column(self, name, type_):
         try:
             self.table_info['columns'][name]
-            raise DuplicateColumnException(
-                self.id_, self.table_info['columns'][name].column_id, name)
+            return "Column already exists"
+            #raise DuplicateColumn(
+            #    self.id_, self.table_info['columns'][name].column_id, name)
         except KeyError:
             self.table_info['modifications']['new']['name'] = name
             self.table_info['modifications']['new']['type'] = type_
+            return True
 
-    def _alter_column(self):
+    def _alter_column(self, name, type_):
+        try:
+            self.table_info['modifications']['altered']['name'] = name
+            self.table_info['modifications']['altered']['type'] = type_
+        except KeyError:
+            return False
 
-        pass
-
-    def _remove_column(self):
-        pass
+    def _remove_column(self, name):
+        try:
+            self.table_info['modifications']['deleted']['name'] = name
+        except KeyError:
+            return False
 
     def _set_table_info(self):
         """Sets up the internal dictionary to be consumed
@@ -56,7 +64,9 @@ class DTable():
                     'name': None,
                     'type': None,
                 },
-                'deleted': None,
+                'deleted': {
+                    'name': None,
+                },
             }
         }
         for column in self.columns:
