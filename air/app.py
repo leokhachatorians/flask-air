@@ -10,6 +10,7 @@ import sqlalchemy
 from backend.dtable import DTable
 from backend.dt_column import DTColumn
 from backend.dt_schema_store import DTSchemaStoreSQL
+from backend.dt_data_engine import DTDataEngineSQL
 from backend.excp.column_exceptions import DuplicateColumn
 
 app = Flask(__name__)
@@ -27,8 +28,8 @@ app.config.from_envvar('AIR_SETTINGS', silent=True)
 
 import forms, helpers, models
 
-schema_store = DTSchemaStoreSQL(session, engine, metadata)
-
+schema_store = DTSchemaStoreSQL(session, engine)
+data_engine = DTDataEngineSQL(session, engine, metadata)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -103,16 +104,19 @@ def modify_sheet(sheet_name):
         if add_form.submit_add_column.data and add_form.validate():
             if dtable._add_column(add_form):
                 schema_store.set_schema(dtable, schema, sheet, 'add')
+                data_engine.set_schema(dtable, 'add')
             else:
                 print('duplicate column name')
         elif delete_form.submit_delete.data and delete_form.validate():
             if dtable._remove_column(request):
                 schema_store.set_schema(dtable, schema, sheet, 'remove')
+                data_engine.set_schema(dtable, 'remove')
             else:
                 print('invalid col id')
         elif edit_form.submit_edit_column.data and edit_form.validate():
             if dtable._alter_column(edit_form, request):
                 schema_store.set_schema(dtable, schema, sheet, 'alter')
+                data_engine.set_schema(dtable, 'alter')
             else:
                 print('invalid')
         return redirect(url_for('modify_sheet', sheet_name=sheet_name))

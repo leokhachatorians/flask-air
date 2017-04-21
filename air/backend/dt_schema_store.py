@@ -13,10 +13,9 @@ class DTSchemaStoreJSON(DTSchema):
     pass
 
 class DTSchemaStoreSQL(DTSchema):
-    def __init__(self, session, engine, metadata):
+    def __init__(self, session, engine):
         self.session = session
         self.engine = engine
-        self.metadata = metadata
 
     def get_tables(self):
         pass
@@ -35,7 +34,7 @@ class DTSchemaStoreSQL(DTSchema):
         elif action == 'alter':
             self._alter_column(dtable, sheet)
         elif action == 'remove':
-            self._remove_column(dtable, schema, sheet)
+            self._remove_column(dtable, schema)
 
     def _add_column(self, dtable, schema, sheet):
         schema_objects = schema.all()
@@ -51,21 +50,13 @@ class DTSchemaStoreSQL(DTSchema):
         current_session = self.session.object_session(new_col)
         current_session.add(new_col)
         current_session.commit()
+        dtable.info['modifications']['id'] = new_col.id
 
-        table = sqlalchemy.Table("table_{}".format(sheet.id), self.metadata)
-        col = sqlalchemy.Column('col_{}'.format(new_col.id),
-                getattr(sa_Types, new_col.column_type))
-        col.create(table, populate_default=True)
-
-    def _remove_column(self, dtable, schema, sheet):
+    def _remove_column(self, dtable, schema):
         col_to_delete_id = dtable.info['modifications']['id']
         col_to_delete = self.session.query(models.Sheets_Schema).filter_by(id=col_to_delete_id).one()
 
-        # drop the given column from the given table
-        sqlalchemy.Column("col_{}".format(col_to_delete_id)).drop(
-                sqlalchemy.Table("table_{}".format(sheet.id), self.metadata))
-
-        for col in self.session.query(models.Sheets_Schema).filter_by(sheet_id=sheet.id).all():
+        for col in self.session.query(models.Sheets_Schema).filter_by(sheet_id=dtable.id_).all():
             if col.sequence_number > col_to_delete.sequence_number:
                 col.sequence_number -= 1
 
