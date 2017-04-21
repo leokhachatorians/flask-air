@@ -46,9 +46,8 @@ def user_adds_column(form, sheet, schema):
     """
     schema_objects = schema.all()
     sequence_number = 0
-    for _ in schema_objects:
-        if _.sequence_number > sequence_number:
-            sequence_number = _.sequence_number + 1
+    if len(schema_objects) > 0:
+        sequence_number = schema_objects[-1].sequence_number + 1
 
     new_col = models.Sheets_Schema(
             sheet, form.column_name.data,
@@ -58,8 +57,7 @@ def user_adds_column(form, sheet, schema):
     current_session.add(new_col)
     current_session.commit()
 
-    table = sqlalchemy.Table("table_{}".format(sheet.id),
-            metadata)
+    table = sqlalchemy.Table("table_{}".format(sheet.id), metadata)
     col = sqlalchemy.Column('col_{}'.format(new_col.id),
             getattr(sa_Types, new_col.column_type))
     col.create(table, populate_default=True)
@@ -77,14 +75,14 @@ def user_removes_columns(sheet, schema, request):
     before we actually delete the column in our schema table.
     """
     col_to_delete_id = request.form.getlist("to_delete")[0]
-    col_to_delete_sequence_num = request.form.getlist("to_delete_seq_num")[0]
-    generated_table = sqlalchemy.Table("table_{}".format(sheet.id), metadata)
-    generated_col_to_delete = sqlalchemy.Column("col_{}".format(col_to_delete_id))
-    generated_col_to_delete.drop(generated_table)
+    col_to_delete = session.query(models.Sheets_Schema).filter_by(id=col_to_delete_id).one()
 
+    # drop the given column from the given table
+    sqlalchemy.Column("col_{}".format(col_to_delete_id)).drop(
+            sqlalchemy.Table("table_{}".format(sheet.id), metadata))
 
     for col in session.query(models.Sheets_Schema).filter_by(sheet_id=sheet.id).all():
-        if col.sequence_number > int(col_to_delete_sequence_num):
+        if col.sequence_number > col_to_delete.sequence_number:
             col.sequence_number -= 1
 
     col_to_delete = session.query(models.Sheets_Schema).filter_by(id=col_to_delete_id).delete()

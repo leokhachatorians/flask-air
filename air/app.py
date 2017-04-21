@@ -27,7 +27,7 @@ app.config.from_envvar('AIR_SETTINGS', silent=True)
 
 import forms, helpers, models
 
-schema_store = DTSchemaStoreSQL(session)
+schema_store = DTSchemaStoreSQL(session, engine, metadata)
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -64,12 +64,6 @@ def view_sheet(sheet_name):
     delete_form = forms.DeleteDataForm(request.form)
 
     dtable = schema_store.get_schema(sheet.id, sheet.sheet_name)
-    result = dtable._add_column('T3', 'Text')
-
-    if result == True:
-        print('added')
-    else:
-        print('didnt add')
 
     if request.method == 'POST':
         if add_form.submit_add_data.data and add_form.validate():
@@ -99,6 +93,7 @@ def modify_sheet(sheet_name):
     add_form = forms.AddColumnForm(request.form)
     delete_form = forms.BaseDeleteForm(request.form)
     edit_form = forms.EditColumnForm(request.form)
+
     sheet = session.query(models.Sheets).filter_by(sheet_name=sheet_name).first()
     schema = session.query(models.Sheets_Schema).filter(models.Sheets_Schema.sheet_id==sheet.id)
 
@@ -106,7 +101,11 @@ def modify_sheet(sheet_name):
 
     if request.method == 'POST':
         if add_form.submit_add_column.data and add_form.validate():
-            helpers.user_adds_column(add_form, sheet, schema)
+            result = dtable._add_column(add_form.column_name.data, add_form.types.data)
+            if result:
+                schema_store.set_schema(dtable, schema, sheet)
+            else:
+                print('duplicate column name')
         elif delete_form.submit_delete.data and delete_form.validate():
             helpers.user_removes_columns(sheet, schema, request)
         elif edit_form.submit_edit_column.data and edit_form.validate():
