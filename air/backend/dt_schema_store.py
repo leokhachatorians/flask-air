@@ -44,8 +44,8 @@ class DTSchemaStoreSQL(DTSchema):
             sequence_number = schema_objects[-1].sequence_number + 1
 
         new_col = models.Sheets_Schema(
-                sheet, dtable.info['modifications']['new']['name'],
-                dtable.info['modifications']['new']['type'],
+                sheet, dtable.info['modifications']['name'],
+                dtable.info['modifications']['type'],
                 sequence_number)
 
         current_session = self.session.object_session(new_col)
@@ -58,7 +58,7 @@ class DTSchemaStoreSQL(DTSchema):
         col.create(table, populate_default=True)
 
     def _remove_column(self, dtable, schema, sheet):
-        col_to_delete_id = dtable.info['modifications']['deleted']['id']
+        col_to_delete_id = dtable.info['modifications']['id']
         col_to_delete = self.session.query(models.Sheets_Schema).filter_by(id=col_to_delete_id).one()
 
         # drop the given column from the given table
@@ -73,8 +73,8 @@ class DTSchemaStoreSQL(DTSchema):
         self.session.commit()
 
     def _alter_column(self, dtable, sheet):
-        col_to_alter_id = dtable.info['modifications']['altered']['id']
+        col_to_alter_id = dtable.info['modifications']['id']
         col = self.session.query(models.Sheets_Schema).filter_by(id=col_to_alter_id).one()
-        col.column_name = dtable.info['modifications']['altered']['name']
-        col.column_type = dtable.info['modifications']['altered']['type']
+        col.column_name = dtable.info['modifications']['name']
+        col.column_type = dtable.info['modifications']['type']
         self.session.commit()

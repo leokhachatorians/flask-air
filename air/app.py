@@ -118,7 +118,6 @@ def modify_sheet(sheet_name):
                 schema_store.set_schema(dtable, schema, sheet, 'alter')
             else:
                 print('invalid')
-            #helpers.user_alters_column(edit_form, sheet, request)
         return redirect(url_for('modify_sheet', sheet_name=sheet_name))
     return render_template('modify_sheet.html',
             schema=dtable.columns, add_form=add_form,

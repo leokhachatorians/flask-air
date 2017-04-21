@@ -24,22 +24,22 @@ class DTable():
             #raise DuplicateColumn(
             #    self.id_, self.table_info['columns'][name].column_id, name)
         except KeyError:
-            self.info['modifications']['new']['name'] = name
-            self.info['modifications']['new']['type'] = type_
+            self.info['modifications']['name'] = name
+            self.info['modifications']['type'] = type_
             return True
 
     def _alter_column(self, form, request):
         try:
-            self.info['modifications']['altered']['name'] = form.column_name.data
-            self.info['modifications']['altered']['type'] = form.types.data
-            self.info['modifications']['altered']['id'] = request.form.getlist('col_to_alter')[0]
+            self.info['modifications']['name'] = form.column_name.data
+            self.info['modifications']['type'] = form.types.data
+            self.info['modifications']['id'] = request.form.getlist('col_to_alter')[0]
             return True
         except KeyError:
             return False
 
     def _remove_column(self, request):
         try:
-            self.info['modifications']['deleted']['id'] = request.form.getlist('to_delete')[0]
+            self.info['modifications']['id'] = request.form.getlist('to_delete')[0]
             return True
         except KeyError:
             return False
@@ -58,17 +58,9 @@ class DTable():
             'table_id': self.id_,
             'columns': {},
             'modifications': {
-                'new': {
-                    'name': None,
-                    'type': None,
-                },
-                'altered': {
-                    'name': None,
-                    'type': None,
-                },
-                'deleted': {
-                    'id': None,
-                },
+                'name': None,
+                'type': None,
+                'id': None,
             }
         }
         for column in self.columns:
