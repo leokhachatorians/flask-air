@@ -1,6 +1,8 @@
 import sqlalchemy
 import sqlalchemy.types as sa_Types
 
+from .dtable_data import DTableData
+
 class DTDataEngine():
     """Empty Abstract Base
     """
@@ -50,3 +52,25 @@ class DTDataEngineSQL(DTDataEngine):
     def _drop_table(self, dtable):
         sqlalchemy.Table("table_{}".format(dtable.id_), self.metadata).drop()
         pass
+
+    def create_handle(self, dtable):
+        return DTableData(dtable, self)
+
+    def _get_table(self, dtable):
+        meta = sqlalchemy.MetaData(bind=self.engine)
+        return sqlalchemy.Table("table_{}".format(dtable.id_), meta, autoload=True)
+
+    def _get_row(self, dtable, row_id):
+        return self.session.query(self._get_table(dtable)).filter_by(id=row_id).one()
+
+    def _get_rows(self, dtable):
+        return self.session.query(self._get_table(dtable)).all()
+
+    def _add_row(self, dtable, data):
+        ins = self._get_table(dtable).insert().values(data)
+        self.engine.connect().execute(ins)
+
+    def _delete_row(self, dtable, row_id):
+        table = self._get_table(dtable)
+        ins = table.delete().where(table.c.id==row_id)
+        self.engine.connect().execute(ins)

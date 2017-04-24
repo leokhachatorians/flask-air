@@ -1,12 +1,13 @@
 from wtforms import (
         Form, BooleanField, StringField, PasswordField, validators,
-        SubmitField, SelectField,
+        SubmitField, SelectField, FieldList, FormField,
 )
 from wtforms.widgets import CheckboxInput, SubmitInput
 
 import wtforms
 
 class Base():
+    """Abstract Form which holds commonly used fields/values"""
     column_type_choices = [
                 ('String', 'Text'), ('Text', 'Long Text'),
                 ('Text', 'Select'), ('Boolean', 'Check Box'),
@@ -54,6 +55,7 @@ class AddDataForm(Form):
                 "style": "margin-bottom: 0;"})
 
 class DeleteDataForm(Form):
+    delete_row_id = Base.hidden_field
     submit_delete_row = SubmitField('X',
             render_kw={
                 'class': 'btn btn-xs btn-danger',

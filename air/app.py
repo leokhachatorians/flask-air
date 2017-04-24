@@ -7,7 +7,6 @@ from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy import Table, MetaData
 from initdb import session, metadata, engine
 import sqlalchemy
-from backend.dt_column import DTColumn
 from backend.dt_schema_store import DTSchemaStoreSQL
 from backend.dt_data_engine import DTDataEngineSQL
 from backend.excp.column_exceptions import DuplicateColumn
@@ -65,17 +64,21 @@ def view_sheet(sheet_name):
     sheet = session.query(models.Sheets).filter_by(sheet_name=sheet_name).first()
     schema = session.query(models.Sheets_Schema).filter(models.Sheets_Schema.sheet_id==sheet.id).all()
     meta = MetaData(bind=engine)
+
     generated_table = Table("table_{}".format(sheet.id), meta, autoload=True)
     add_form = forms.AddDataForm(request.form)
     delete_form = forms.DeleteDataForm(request.form)
 
     dtable = schema_store.get_schema(sheet.sheet_name, sheet.id)
+    handle = data_engine.create_handle(dtable)
 
     if request.method == 'POST':
         if add_form.submit_add_data.data and add_form.validate():
-            helpers.user_adds_data(generated_table, schema, request, engine)
+            data = request.form.getlist("add_records")
+            data = {'col_{}'.format(schema[i].id): data[i] for i, _ in enumerate(data)}
+            handle.add_row(dtable, data)
         elif delete_form.submit_delete_row.data and delete_form.validate():
-            helpers.user_deletes_row(generated_table, request.form.getlist('row_id')[0], engine)
+            handle.delete_row(dtable, delete_form.delete_row_id.data)
         return redirect(url_for('view_sheet', sheet_name=sheet_name))
 
     # Make sure to close the session after querying the generated table,

@@ -32,7 +32,7 @@ class DTSchemaStoreSQL(DTSchema):
 
     def set_schema(self, dtable, action, schema=None, sheet=None):
         if action == 'add':
-            self._add_column(dtable, schema, sheet)
+            self._add_column(dtable, sheet)
         elif action == 'alter':
             self._alter_column(dtable, sheet)
         elif action == 'remove':
@@ -42,11 +42,8 @@ class DTSchemaStoreSQL(DTSchema):
         elif action == 'drop':
             self._drop_table(dtable)
 
-    def _add_column(self, dtable, schema, sheet):
-        schema_objects = schema.all()
-        sequence_number = 0
-        if len(schema_objects) > 0:
-            sequence_number = schema_objects[-1].sequence_number + 1
+    def _add_column(self, dtable, sheet):
+        sequence_number = len(dtable.columns)
 
         new_col = models.Sheets_Schema(
                 sheet, dtable.info['modifications']['name'],

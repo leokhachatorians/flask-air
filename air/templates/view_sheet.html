@@ -42,10 +42,10 @@
                     <i class="fa fa-expand icon"></i>
                   </span>
                 </td>
-                <input type="hidden" name="row_id" value="{{ chunk[0] }}">
                 {% for column in chunk[1:] %}
                   <td>{{ column }}</td>
                 {% endfor %}
+                {{ delete_form.delete_row_id(value=chunk[0]) }}
                 <td>{{ delete_form.submit_delete_row }}</td>
               </tr>
             </form>
