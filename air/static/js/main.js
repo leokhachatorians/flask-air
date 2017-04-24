@@ -45,8 +45,11 @@ for (var i = 0; i < edit_column_buttons.length; i++) (function(i) {
 		var id_tag = "edit_column_button_" + i;
 		var old_type = id_tag.replace(id_tag, "clicked_column_type_" + i);
 		document.getElementById('edit_column_old_name').value = this.value;
+		document.getElementById('old_column_name').value = this.value;
 		document.getElementById('edit_column_header').innerText = "Edit Column <" + this.value + ">";
-		document.getElementById('col_to_alter').value = document.getElementById("clicked_column_name_" + this.value).value;
+
+		// set the ID associated with the button clicked. So we actually know what we're trying to edit.
+		document.getElementById('column_id').value = document.getElementById("clicked_column_name_" + this.value).value;
 		document.getElementById("edit_column_old_type").value = document.getElementById(old_type).value;
 		toggle_well('edit_column_well');
 	}

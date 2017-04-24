@@ -91,30 +91,30 @@ def modify_sheet(sheet_name):
     for deletion. As such, there exists two blocks which handle
     each respective action.
     """
-    add_form = forms.AddColumnForm(request.form)
-    delete_form = forms.BaseDeleteForm(request.form)
-    edit_form = forms.EditColumnForm(request.form)
-
     sheet = session.query(models.Sheets).filter_by(sheet_name=sheet_name).first()
     schema = session.query(models.Sheets_Schema).filter(models.Sheets_Schema.sheet_id==sheet.id)
+
+    add_form = forms.AddColumnForm(request.form)
+    delete_form = forms.DeleteColumnForm(request.form)
+    edit_form = forms.EditColumnForm(request.form)
 
     dtable = schema_store.get_schema(sheet.id, sheet.sheet_name)
 
     if request.method == 'POST':
         if add_form.submit_add_column.data and add_form.validate():
-            if dtable._add_column(add_form):
+            if dtable.add_column(add_form):
                 schema_store.set_schema(dtable, schema, sheet, 'add')
                 data_engine.set_schema(dtable, 'add')
             else:
                 print('duplicate column name')
         elif delete_form.submit_delete.data and delete_form.validate():
-            if dtable._remove_column(request):
+            if dtable.remove_column(delete_form):
                 schema_store.set_schema(dtable, schema, sheet, 'remove')
                 data_engine.set_schema(dtable, 'remove')
             else:
                 print('invalid col id')
         elif edit_form.submit_edit_column.data and edit_form.validate():
-            if dtable._alter_column(edit_form, request):
+            if dtable.alter_column(edit_form):
                 schema_store.set_schema(dtable, schema, sheet, 'alter')
                 data_engine.set_schema(dtable, 'alter')
             else:

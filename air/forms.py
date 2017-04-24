@@ -15,6 +15,10 @@ class Base():
                 ('DateTime', 'Timestamp'), ('BigInteger', 'Integer'),
                 ('String', 'Time')]
 
+    hidden_field = StringField('',
+            [validators.Length(min=1), validators.DataRequired()],
+            render_kw={'type': 'hidden'})
+
 class NewSheetForm(Form):
     sheet_name = StringField('Sheet Name',
             [validators.Length(min=1, max=25), validators.DataRequired()],
@@ -27,8 +31,8 @@ class NewSheetForm(Form):
                 'class': 'btn btn-s btn-primary',
                 'style': 'margin-bottom: 0;'})
 
-class AddColumnForm(Form, Base):
-    column_name = StringField('Column Name',
+class AddColumnForm(Form):
+    add_column_name = StringField('Column Name',
             [validators.Length(min=1, max=25), validators.DataRequired()],
             render_kw={
                 "placeholder": "Name",
@@ -56,7 +60,7 @@ class DeleteDataForm(Form):
                 'style': 'margin-bottom: 0;'})
 
 class EditColumnForm(Form):
-    column_name = StringField('New Column Name',
+    edit_column_name = StringField('New Column Name',
             [validators.Length(min=1, max=25), validators.DataRequired()],
             render_kw={
                 "placeholder": "Name",
@@ -66,12 +70,20 @@ class EditColumnForm(Form):
             choices=Base.column_type_choices,
             render_kw={"class": "form-control",})
 
+    column_id = Base.hidden_field
+
+    old_column_name = Base.hidden_field
+
     submit_edit_column = SubmitField('Save',
             render_kw={
                 "class": "btn btn-s btn-success",
                 "style": "margin-bottom: 0;"})
 
-class BaseDeleteForm(Form):
+class DeleteColumnForm(Form):
+    delete_column_name = Base.hidden_field
+
+    delete_column_id = Base.hidden_field
+
     submit_delete = SubmitField('Delete',
             render_kw={
                 "class":"btn btn-xs btn-danger",

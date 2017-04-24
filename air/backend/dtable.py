@@ -17,8 +17,8 @@ class DTable():
         self.columns = columns
         self._set_table_info()
 
-    def _add_column(self, form):
-        name = form.column_name.data
+    def add_column(self, form):
+        name = form.add_column_name.data
         type_ = form.types.data
         try:
             self.info['columns'][name]
@@ -30,18 +30,20 @@ class DTable():
             self.info['modifications']['type'] = type_
             return True
 
-    def _alter_column(self, form, request):
+    def alter_column(self, form):
         try:
-            self.info['modifications']['name'] = form.column_name.data
+            self.info['columns'][form.old_column_name.data]
+            self.info['modifications']['name'] = form.edit_column_name.data
             self.info['modifications']['type'] = form.types.data
-            self.info['modifications']['id'] = request.form.getlist('col_to_alter')[0]
+            self.info['modifications']['id'] = form.column_id.data
             return True
         except KeyError:
             return False
 
-    def _remove_column(self, request):
+    def remove_column(self, form):
         try:
-            self.info['modifications']['id'] = request.form.getlist('to_delete')[0]
+            self.info['columns'][form.delete_column_name.data]
+            self.info['modifications']['id'] = form.delete_column_id.data
             return True
         except KeyError:
             return False
