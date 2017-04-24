@@ -78,8 +78,9 @@
                   <form method="POST">
                     <a href="{{ url_for('modify_sheet', sheet_name=sheet.sheet_name) }}" type="button" class="btn btn-xs btn-success" style="margin-bottom: 0;">Edit Columns</a>
                     <a href="{{ url_for('view_sheet', sheet_name=sheet.sheet_name) }}" type="button" class="btn btn-xs btn-primary" style="margin-bottom: 0;">Edit Data</a>
+                    {{ delete_form.delete_table_name(value=sheet.sheet_name) }}
+                    {{ delete_form.delete_table_id(value=sheet.id) }}
                     {{ delete_form.submit_delete }}
-                    <input type="hidden" name="sheet_to_drop" value="{{ sheet.id }}">
                   </form>
                 </td>
               </tr>
@@ -87,7 +88,6 @@
             </tbody>
           </table>
           <!-- End View Table List Section -->
-
         </div>
       </div>
   

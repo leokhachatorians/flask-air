@@ -22,6 +22,10 @@ class DTDataEngineSQL(DTDataEngine):
             self._alter_column(dtable)
         elif action == 'remove':
             self._remove_column(dtable)
+        elif action == 'generate':
+            self._generate_table(dtable)
+        elif action == 'drop':
+            self._drop_table(dtable)
 
     def _add_column(self, dtable):
         table = sqlalchemy.Table("table_{}".format(dtable.id_), self.metadata)
@@ -36,3 +40,13 @@ class DTDataEngineSQL(DTDataEngine):
         sqlalchemy.Column("col_{}".format(dtable.info['modifications']['id'])).drop(
                 sqlalchemy.Table("table_{}".format(dtable.id_), self.metadata))
 
+    def _generate_table(self, dtable):
+        metadata = sqlalchemy.MetaData(self.engine)
+        table = sqlalchemy.Table(
+                'table_{}'.format(dtable.info['table_id']),
+                metadata, sqlalchemy.Column('id', sqlalchemy.Integer, primary_key=True))
+        metadata.create_all()
+
+    def _drop_table(self, dtable):
+        sqlalchemy.Table("table_{}".format(dtable.id_), self.metadata).drop()
+        pass

@@ -20,21 +20,27 @@ class DTSchemaStoreSQL(DTSchema):
     def get_tables(self):
         pass
 
-    def get_schema(self, table_id, table_name):
+    def get_schema(self, table_name, table_id=None):
+        if table_id == None:
+            return DTable(table_name)
         dt_columns = []
         schema = self.session.query(models.Sheets_Schema).filter(models.Sheets_Schema.sheet_id==table_id).all()
         schema.sort(key=lambda x: x.sequence_number)
         for col in schema:
             dt_columns.append(DTColumn(col.id, col.column_name, col.column_type))
-        return DTable(table_id, table_name, dt_columns)
+        return DTable(table_name, table_id, dt_columns)
 
-    def set_schema(self, dtable, schema, sheet, action):
+    def set_schema(self, dtable, action, schema=None, sheet=None):
         if action == 'add':
             self._add_column(dtable, schema, sheet)
         elif action == 'alter':
             self._alter_column(dtable, sheet)
         elif action == 'remove':
             self._remove_column(dtable, schema)
+        elif action == 'generate':
+            self._generate_table(dtable)
+        elif action == 'drop':
+            self._drop_table(dtable)
 
     def _add_column(self, dtable, schema, sheet):
         schema_objects = schema.all()
@@ -69,3 +75,15 @@ class DTSchemaStoreSQL(DTSchema):
         col.column_name = dtable.info['modifications']['name']
         col.column_type = dtable.info['modifications']['type']
         self.session.commit()
+
+    def _generate_table(self, dtable):
+        # hard coding user ID
+        sheet = models.Sheets(1, dtable.name)
+        self.session.add(sheet)
+        self.session.commit()
+        dtable.info['table_id'] = sheet.id
+
+    def _drop_table(self, dtable):
+        self.session.query(models.Sheets).filter_by(id=dtable.id_).delete()
+        self.session.commit()
+        pass

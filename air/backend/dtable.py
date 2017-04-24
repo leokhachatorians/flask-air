@@ -11,9 +11,9 @@ class DTable():
     which is in charge of actually modifying the meta-schema of the table in the
     actual database.
     """
-    def __init__(self, id_, name, columns):
-        self.id_ = id_
+    def __init__(self, name, id_=None, columns=[]):
         self.name = name
+        self.id_ = id_
         self.columns = columns
         self._set_table_info()
 

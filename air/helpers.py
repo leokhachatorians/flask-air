@@ -105,13 +105,13 @@ def user_deletes_row(generated_table, row_id, engine):
     ins = generated_table.delete().where(generated_table.c.id==row_id)
     engine.connect().execute(ins)
 
-def user_deletes_table(sheets, request):
+def user_deletes_table(sheets, form):
     """Deletes a user generated tabled
 
     Based on the id of the sheet, remove the corresponding generated table,
     and the entry in 'Sheets' as well. Deletes the column definitions automatically.
     """
-    sheet_to_drop_id = request.form.getlist("sheet_to_drop")[0]
+    sheet_to_drop_id = form.delete_table_id.data
     generate_table = sqlalchemy.Table("table_{}".format(sheet_to_drop_id), metadata).drop()
     session.query(models.Sheets).filter_by(id=sheet_to_drop_id).delete()
     session.commit()

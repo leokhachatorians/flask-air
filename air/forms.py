@@ -89,3 +89,14 @@ class DeleteColumnForm(Form):
                 "class":"btn btn-xs btn-danger",
                 "style": "margin-bottom: 0",
                 })
+
+class DeleteTableForm(Form):
+    submit_delete = SubmitField('Delete',
+            render_kw={
+                "class":"btn btn-xs btn-danger",
+                "style": "margin-bottom: 0",
+                })
+
+    delete_table_id = Base.hidden_field
+
+    delete_table_name = Base.hidden_field
