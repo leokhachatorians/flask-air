@@ -1,4 +1,4 @@
-class DTableData():
+class DTableHandle():
     """Handler to a generated table"""
     def __init__(self, dtable, data_engine):
         self.dtable = dtable

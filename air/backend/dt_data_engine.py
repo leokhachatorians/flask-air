@@ -1,7 +1,7 @@
 import sqlalchemy
 import sqlalchemy.types as sa_Types
 
-from .dtable_data import DTableData
+from .dtable_handle import DTableHandle
 
 class DTDataEngine():
     """Empty Abstract Base
@@ -54,7 +54,7 @@ class DTDataEngineSQL(DTDataEngine):
         pass
 
     def create_handle(self, dtable):
-        return DTableData(dtable, self)
+        return DTableHandle(dtable, self)
 
     def _get_table(self, dtable):
         meta = sqlalchemy.MetaData(bind=self.engine)
