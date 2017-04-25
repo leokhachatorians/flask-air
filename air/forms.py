@@ -61,6 +61,12 @@ class DeleteDataForm(Form):
                 'class': 'btn btn-xs btn-danger',
                 'style': 'margin-bottom: 0;'})
 
+class EditDataForm(Form):
+    submit_edit_row = SubmitField('Save',
+            render_kw={
+                'class': 'btn btn-xs btn-success',
+                'style': 'margin-bottom: 0;'})
+
 class EditColumnForm(Form):
     edit_column_name = StringField('New Column Name',
             [validators.Length(min=1, max=25), validators.DataRequired()],

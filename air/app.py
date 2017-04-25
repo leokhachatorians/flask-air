@@ -68,6 +68,7 @@ def view_sheet(sheet_name):
     generated_table = Table("table_{}".format(sheet.id), meta, autoload=True)
     add_form = forms.AddDataForm(request.form)
     delete_form = forms.DeleteDataForm(request.form)
+    edit_form = forms.EditDataForm(request.form)
 
     dtable = schema_store.get_schema(sheet.sheet_name, sheet.id)
     handle = data_engine.create_handle(dtable)
@@ -79,6 +80,9 @@ def view_sheet(sheet_name):
             handle.add_row(dtable, data)
         elif delete_form.submit_delete_row.data and delete_form.validate():
             handle.delete_row(dtable, delete_form.delete_row_id.data)
+        elif edit_form.submit_edit_row.data and edit_form.validate():
+            print(request.form.get('updated_cells'))
+            print('here')
         return redirect(url_for('view_sheet', sheet_name=sheet_name))
 
     # Make sure to close the session after querying the generated table,
@@ -89,7 +93,7 @@ def view_sheet(sheet_name):
     return render_template('view_sheet.html',
             schema=dtable.columns, sheet_name=sheet_name,
             contents=contents, add_form=add_form,
-            delete_form=delete_form)
+            delete_form=delete_form, edit_form=edit_form)
 
 @app.route('/modify_sheet/<sheet_name>', methods=['GET', 'POST'])
 def modify_sheet(sheet_name):

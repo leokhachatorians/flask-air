@@ -28,13 +28,14 @@
           <tr id="table_head">
             <th width="5" style="border-right-style: hidden;"></th>
             {% for i in schema %}
-            <th>{{ i.column_name }}</th>
+            <th id="column_{{ loop.index0 }}">{{ i.column_name }}</th>
             {% endfor %}
             <th>Commands</th>
           </tr>
         </thead>
         <tbody>
           {% for chunk in contents %}
+          {% set outer_loop = loop %}
             <form method="POST">
               <tr id="row_{{ loop.index0 }}">
                 <td width="5" style="border-right-style: hidden;">
@@ -43,10 +44,18 @@
                   </span>
                 </td>
                 {% for column in chunk[1:] %}
-                  <td>{{ column }}</td>
+                <td name="updated_cells" id="cell_{{ outer_loop.index0 }}_{{ loop.index0 }}">{{ column }}</td>
                 {% endfor %}
                 {{ delete_form.delete_row_id(value=chunk[0]) }}
-                <td>{{ delete_form.submit_delete_row }}</td>
+                <td>
+                  {{ delete_form.submit_delete_row }}
+                  <button type="button" id="edit_row_{{ loop.index0 }}" 
+                   class="btn btn-xs btn-primary" style="margin-bottom: 0;" value="{{ loop.index0 }}">Edit</button>
+                  <input type="submit" class="btn btn-xs btn-success hide-icon" style="margin-bottom: 0;" value="Save">
+                  <span id="save_button_{{ loop.index0 }}" class="">
+                    {{ edit_form.submit_edit_row }}
+                  </span>
+                </td>
               </tr>
             </form>
           {% endfor %}
