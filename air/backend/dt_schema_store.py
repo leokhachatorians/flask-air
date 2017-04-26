@@ -83,4 +83,3 @@ class DTSchemaStoreSQL(DTSchema):
     def _drop_table(self, dtable):
         self.session.query(models.Sheets).filter_by(id=dtable.id_).delete()
         self.session.commit()
-        pass

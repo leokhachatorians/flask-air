@@ -8,6 +8,12 @@ function toggle_well(_id) {
 	}
 }
 
+function toggle_editable(row_num) {
+	for (var c = 0; c < num_columns; c++) {
+		var save_button_span = document.getElementById('save_button_' + row_num);
+	}
+}
+
 var new_table_button = document.getElementById('new_table_button');
 var cancel_table_button = document.getElementById('cancel_new_table_button');
 
@@ -19,8 +25,10 @@ var cancel_edit_button = document.getElementById('cancel_edit_column_button');
 var edit_column_buttons = [].slice.call(document.querySelectorAll('[id^=edit_column_button_]'));
 
 var sheet_rows = [].slice.call(document.querySelectorAll('[id^=row_]'));
-var edit_row_buttons = [].slice.call(document.querySelectorAll('[id^=edit_row_]'));
+var row_cells = [].slice.call(document.querySelectorAll('[id^=cell_]'));
+var default_row_cells = []
 var num_columns = [].slice.call(document.querySelectorAll('[id^=column_]')).length;
+var num_rows = sheet_rows.length;
 
 if (typeof(new_table_button) != 'undefined' && new_table_button != null) {
 	new_table_button.onclick = function() {
@@ -68,15 +76,6 @@ for (var i = 0; i < sheet_rows.length; i++) (function(i) {
 		document.getElementById('expand_icon_'+i).classList.toggle('hide-icon');
 	}, false);
 })(i);
-
-for (var i = 0; i < edit_row_buttons.length; i++) (function(i) {
-	edit_row_buttons[i].onclick = function() {
-		for (var j = 0; j < num_columns; j++) {
-			document.getElementById('cell_' + i + '_' + j).setAttribute('contenteditable','');
-		}
-	}
-})(i);
-
 
 if (typeof(cancel_edit_button) != 'undefined' && cancel_edit_button != null) {
 	cancel_edit_button.onclick = function() {

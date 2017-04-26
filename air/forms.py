@@ -62,6 +62,7 @@ class DeleteDataForm(Form):
                 'style': 'margin-bottom: 0;'})
 
 class EditDataForm(Form):
+    edit_row_id = Base.hidden_field
     submit_edit_row = SubmitField('Save',
             render_kw={
                 'class': 'btn btn-xs btn-success',

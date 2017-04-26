@@ -64,7 +64,7 @@ class DTDataEngineSQL(DTDataEngine):
         return self.session.query(self._get_table(dtable)).filter_by(id=row_id).one()
 
     def _get_rows(self, dtable):
-        return self.session.query(self._get_table(dtable)).all()
+        return self.session.query(self._get_table(dtable)).order_by('id')
 
     def _add_row(self, dtable, data):
         ins = self._get_table(dtable).insert().values(data)
@@ -74,3 +74,22 @@ class DTDataEngineSQL(DTDataEngine):
         table = self._get_table(dtable)
         ins = table.delete().where(table.c.id==row_id)
         self.engine.connect().execute(ins)
+
+    def _update_row(self, dtable, row_id, data):
+        """Update a generated table row contents
+
+        Inspects the columns of the generated table, parses them and creates
+        a dictionary of {'column_name': 'data'} which we then use to update the
+        aforementioned row. Note that when we pass in the values to update,
+        we have synchronize_session set to false. Since the generated
+        tables aren't actually mapped to a SQLAlchemy class, inserting via
+        query just wont work.
+        """
+        generated_table = self._get_table(dtable)
+        table_name = "table_{}".format(dtable.id_)
+        row = self.session.query(generated_table).filter_by(id=row_id).first()
+        inspector = sqlalchemy.inspect(self.engine)
+        column_names = [column['name'] for column in inspector.get_columns(table_name) if column['name'] != 'id']
+        values = {col_name: data[i] for i, col_name in enumerate(column_names)}
+        self.session.query(generated_table).filter_by(id=row_id).update(values, synchronize_session=False)
+        self.session.commit()

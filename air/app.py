@@ -68,6 +68,7 @@ def view_sheet(sheet_name):
     meta = MetaData(bind=engine)
 
     generated_table = Table("table_{}".format(sheet.id), meta, autoload=True)
+
     add_form = forms.AddDataForm(request.form)
     delete_form = forms.DeleteDataForm(request.form)
     edit_form = forms.EditDataForm(request.form)
@@ -83,13 +84,12 @@ def view_sheet(sheet_name):
         elif delete_form.submit_delete_row.data and delete_form.validate():
             handle.delete_row(dtable, delete_form.delete_row_id.data)
         elif edit_form.submit_edit_row.data and edit_form.validate():
-            print(request.form.get('updated_cells'))
-            print('here')
+            handle.update_row(dtable, edit_form.edit_row_id.data, request.form.getlist('updated_cells'))
         return redirect(url_for('view_sheet', sheet_name=sheet_name))
 
     # Make sure to close the session after querying the generated table,
     # otherwise the session keeps a lock on table for some reason.
-    contents = session.query(generated_table).all()
+    contents = handle.get_rows(dtable)
     session.close()
 
     return render_template('view_sheet.html',

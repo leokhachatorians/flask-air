@@ -44,17 +44,15 @@
                   </span>
                 </td>
                 {% for column in chunk[1:] %}
-                <td name="updated_cells" id="cell_{{ outer_loop.index0 }}_{{ loop.index0 }}">{{ column }}</td>
+                <td>
+                  <input type="text" name="updated_cells" id="cell_{{ outer_loop.index0 }}_{{ loop.index0 }}" value="{{ column }}">
+                </td>
                 {% endfor %}
                 {{ delete_form.delete_row_id(value=chunk[0]) }}
+                {{ edit_form.edit_row_id(value=chunk[0]) }}
                 <td>
                   {{ delete_form.submit_delete_row }}
-                  <button type="button" id="edit_row_{{ loop.index0 }}" 
-                   class="btn btn-xs btn-primary" style="margin-bottom: 0;" value="{{ loop.index0 }}">Edit</button>
-                  <input type="submit" class="btn btn-xs btn-success hide-icon" style="margin-bottom: 0;" value="Save">
-                  <span id="save_button_{{ loop.index0 }}" class="">
-                    {{ edit_form.submit_edit_row }}
-                  </span>
+                  {{ edit_form.submit_edit_row }}
                 </td>
               </tr>
             </form>

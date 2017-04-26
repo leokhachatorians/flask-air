@@ -15,3 +15,6 @@ class DTableHandle():
 
     def delete_row(self, dtable, row_id):
         self.data_engine._delete_row(dtable, row_id)
+
+    def update_row(self, dtable, row_id, data):
+        self.data_engine._update_row(dtable, row_id, data)
