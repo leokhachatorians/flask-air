@@ -90,5 +90,3 @@ class DTSchemaStoreSQL(DTSchema):
         sheet = self.session.query(models.Sheets).filter_by(id=dtable.id_).one()
         sheet.sheet_name = dtable.info['modifications']['name']
         self.session.commit()
-
-

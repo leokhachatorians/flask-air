@@ -79,6 +79,6 @@ class DTable():
         for column in self.columns:
             self.info['columns'][column.column_name] = column
 
-    def _list_table(self):
+    def list_table(self):
         pp = pprint.PrettyPrinter(indent=4)
         return pp.pformat(self.info)

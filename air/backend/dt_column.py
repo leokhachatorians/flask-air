@@ -11,10 +11,10 @@ class DTColumn():
         self.column_name = column_name
         self.column_type = column_type
 
-    def _edit_name(self, new_name):
+    def edit_name(self, new_name):
         self.column_name = new_name
 
-    def _edit_type(self, new_type):
+    def edit_type(self, new_type):
         self.column_type = new_type
 
     def __repr__(self):
