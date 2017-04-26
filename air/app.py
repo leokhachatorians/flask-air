@@ -39,15 +39,17 @@ def index():
     if request.method == 'POST':
         if new_sheet_form.submit_new_sheet.data and new_sheet_form.validate():
             dtable = schema_store.get_schema(new_sheet_form.sheet_name.data)
-            schema_store.set_schema(dtable, 'generate')
-            data_engine.set_schema(dtable, 'generate')
+            dtable.info['action'] = 'generate'
+            schema_store.set_schema(dtable)
+            data_engine.set_schema(dtable)
             return redirect(url_for('index'))
         elif delete_form.submit_delete.data and delete_form.validate():
             sheet_name = delete_form.delete_table_name.data
             sheet_id = delete_form.delete_table_id.data
             dtable = schema_store.get_schema(sheet_name, sheet_id)
-            schema_store.set_schema(dtable, 'drop')
-            data_engine.set_schema(dtable, 'drop')
+            dtable.info['action'] = 'drop'
+            schema_store.set_schema(dtable)
+            data_engine.set_schema(dtable)
             return redirect(url_for('index'))
     return render_template("index.html", sheets=sheets,
             new_sheet_form=new_sheet_form, delete_form=delete_form)
@@ -115,20 +117,20 @@ def modify_sheet(sheet_name):
     if request.method == 'POST':
         if add_form.submit_add_column.data and add_form.validate():
             if dtable.add_column(add_form):
-                schema_store.set_schema(dtable, 'add', schema, sheet)
-                data_engine.set_schema(dtable, 'add')
+                schema_store.set_schema(dtable, schema, sheet)
+                data_engine.set_schema(dtable)
             else:
                 print('duplicate column name')
         elif delete_form.submit_delete.data and delete_form.validate():
             if dtable.remove_column(delete_form):
-                schema_store.set_schema(dtable, 'remove', schema, sheet)
-                data_engine.set_schema(dtable, 'remove')
+                schema_store.set_schema(dtable, schema, sheet)
+                data_engine.set_schema(dtable)
             else:
                 print('invalid col id')
         elif edit_form.submit_edit_column.data and edit_form.validate():
             if dtable.alter_column(edit_form):
-                schema_store.set_schema(dtable, 'alter', schema, sheet)
-                data_engine.set_schema(dtable, 'alter')
+                schema_store.set_schema(dtable, schema, sheet)
+                data_engine.set_schema(dtable)
             else:
                 print('invalid')
         return redirect(url_for('modify_sheet', sheet_name=sheet_name))

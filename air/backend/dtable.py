@@ -28,6 +28,7 @@ class DTable():
         except KeyError:
             self.info['modifications']['name'] = name
             self.info['modifications']['type'] = type_
+            self.info['action'] = 'add'
             return True
 
     def alter_column(self, form):
@@ -36,6 +37,7 @@ class DTable():
             self.info['modifications']['name'] = form.edit_column_name.data
             self.info['modifications']['type'] = form.types.data
             self.info['modifications']['id'] = form.column_id.data
+            self.info['action'] = 'alter'
             return True
         except KeyError:
             return False
@@ -44,6 +46,7 @@ class DTable():
         try:
             self.info['columns'][form.delete_column_name.data]
             self.info['modifications']['id'] = form.delete_column_id.data
+            self.info['action'] = 'remove'
             return True
         except KeyError:
             return False
@@ -61,6 +64,7 @@ class DTable():
             'table_name': self.name,
             'table_id': self.id_,
             'columns': {},
+            'action': '',
             'modifications': {
                 'name': None,
                 'type': None,

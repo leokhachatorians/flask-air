@@ -17,16 +17,16 @@ class DTDataEngineSQL(DTDataEngine):
         self.engine = engine
         self.metadata = metadata
 
-    def set_schema(self, dtable, action):
-        if action == 'add':
+    def set_schema(self, dtable):
+        if dtable.info['action'] == 'add':
             self._add_column(dtable)
-        elif action == 'alter':
+        elif dtable.info['action'] == 'alter':
             self._alter_column(dtable)
-        elif action == 'remove':
+        elif dtable.info['action'] == 'remove':
             self._remove_column(dtable)
-        elif action == 'generate':
+        elif dtable.info['action'] == 'generate':
             self._generate_table(dtable)
-        elif action == 'drop':
+        elif dtable.info['action'] == 'drop':
             self._drop_table(dtable)
 
     def _add_column(self, dtable):

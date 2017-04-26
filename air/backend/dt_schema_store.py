@@ -30,16 +30,16 @@ class DTSchemaStoreSQL(DTSchema):
             dt_columns.append(DTColumn(col.id, col.column_name, col.column_type))
         return DTable(table_name, table_id, dt_columns)
 
-    def set_schema(self, dtable, action, schema=None, sheet=None):
-        if action == 'add':
+    def set_schema(self, dtable, schema=None, sheet=None):
+        if dtable.info['action'] == 'add':
             self._add_column(dtable, sheet)
-        elif action == 'alter':
+        elif dtable.info['action'] == 'alter':
             self._alter_column(dtable, sheet)
-        elif action == 'remove':
+        elif dtable.info['action'] == 'remove':
             self._remove_column(dtable, schema)
-        elif action == 'generate':
+        elif dtable.info['action'] == 'generate':
             self._generate_table(dtable)
-        elif action == 'drop':
+        elif dtable.info['action'] == 'drop':
             self._drop_table(dtable)
 
     def _add_column(self, dtable, sheet):
