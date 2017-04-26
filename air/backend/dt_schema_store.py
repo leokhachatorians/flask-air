@@ -41,6 +41,8 @@ class DTSchemaStoreSQL(DTSchema):
             self._generate_table(dtable)
         elif dtable.info['action'] == 'drop':
             self._drop_table(dtable)
+        elif dtable.info['action'] == 'change_tablename':
+            self._change_tablename(dtable)
 
     def _add_column(self, dtable, sheet):
         sequence_number = len(dtable.columns)
@@ -83,3 +85,10 @@ class DTSchemaStoreSQL(DTSchema):
     def _drop_table(self, dtable):
         self.session.query(models.Sheets).filter_by(id=dtable.id_).delete()
         self.session.commit()
+
+    def _change_tablename(self, dtable):
+        sheet = self.session.query(models.Sheets).filter_by(id=dtable.id_).one()
+        sheet.sheet_name = dtable.info['modifications']['name']
+        self.session.commit()
+
+

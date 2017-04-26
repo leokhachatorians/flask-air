@@ -3,8 +3,10 @@
 {% block heading %}
   <div class="col-lg-12">
     <div class="ibox float-e-m argins">
-      <h1>{{ sheet_name }} Columns</h1> 
-      <h2>Update Table Columns</h2>
+      <h1>Table: {{ sheet.sheet_name }}</h1> 
+      <h3><button type="button" class="btn btn-xs btn-primary" style="margin-bottom: 0;"
+              data-toggle="modal" data-target="#change_table_name_modal">Change Table Name</button>
+      </h3>
     </div>
   </div>
 {% endblock heading %}
@@ -83,9 +85,9 @@
                 </thead>
                 <tbody>
                   <tr>
-                    <td style-"vertical-align: middle;"><label class="col-lg-2 control-label">Old Name</label></td>
+                    <td style-"vertical-align: middle;"><label class="col-lg-2 control-label">Current Column Name</label></td>
                     <td><input type="text" id="edit_column_old_name" class="form-control" value="placeholder" disabled></td>
-                    <td style="vertical-align: middle;"><label class="col-lg-2 control-label">New Name</label></td>
+                    <td style="vertical-align: middle;"><label class="col-lg-2 control-label">New Column Name</label></td>
                     <td>{{ edit_form.edit_column_name }}</td>
                     {{ edit_form.old_column_name }}
                   </tr>
@@ -150,6 +152,31 @@
       </div>
       <!-- End of Table of Column Info -->
     </div>
+
+  <!-- Change Tablename Modal -->
+  <div id="change_table_name_modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Change Tablename</h4>
+        </div>
+        <div class="modal-body">  
+        <form method="POST">
+          <label class="col-lg-2 control-label">Current Tablename</label>
+          <input type="text" id="edit_column_old_name" class="form-control" value="{{ sheet.sheet_name }}" disabled>
+          </br>
+          <label class="col-lg-2 control-label">New Tablename</label>
+          {{ edit_sheet_form.edit_sheet_name }}
+          <div class="modal-footer">
+            {{ edit_sheet_form.submit_edit_sheet }}
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- End Change Tablename Modal -->
 {% endblock content %}
 
 {% block unique_scripts %}

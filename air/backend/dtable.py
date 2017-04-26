@@ -51,6 +51,11 @@ class DTable():
         except KeyError:
             return False
 
+    def change_tablename(self, form):
+        self.info['modifications']['name'] = form.edit_sheet_name.data
+        self.info['action'] = 'change_tablename'
+        return True
+
     def _set_table_info(self):
         """Sets up the internal dictionary to be consumed
 

@@ -32,6 +32,18 @@ class NewSheetForm(Form):
                 'class': 'btn btn-s btn-primary',
                 'style': 'margin-bottom: 0;'})
 
+class EditSheetForm(Form):
+    edit_sheet_name = StringField('Table Name',
+            [validators.Length(min=1, max=25), validators.DataRequired()],
+            render_kw={
+                "placeholder": "My Table",
+                "class": "form-control"})
+
+    submit_edit_sheet = SubmitField('Save',
+            render_kw={
+                'class': 'btn btn-s btn-primary',
+                'style': 'margin-bottom: 0;'})
+
 class AddColumnForm(Form):
     add_column_name = StringField('Column Name',
             [validators.Length(min=1, max=25), validators.DataRequired()],

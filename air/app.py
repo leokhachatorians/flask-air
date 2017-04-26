@@ -111,6 +111,7 @@ def modify_sheet(sheet_name):
     add_form = forms.AddColumnForm(request.form)
     delete_form = forms.DeleteColumnForm(request.form)
     edit_form = forms.EditColumnForm(request.form)
+    edit_sheet_form = forms.EditSheetForm(request.form)
 
     dtable = schema_store.get_schema(sheet.sheet_name, sheet.id)
 
@@ -133,11 +134,16 @@ def modify_sheet(sheet_name):
                 data_engine.set_schema(dtable)
             else:
                 print('invalid')
+        elif edit_sheet_form.submit_edit_sheet.data and edit_sheet_form.validate():
+            if dtable.change_tablename(edit_sheet_form):
+                schema_store.set_schema(dtable)
+                new_name = dtable.info['modifications']['name']
+                return redirect(url_for('modify_sheet', sheet_name=new_name))
         return redirect(url_for('modify_sheet', sheet_name=sheet_name))
     return render_template('modify_sheet.html',
             schema=dtable.columns, add_form=add_form,
             delete_form=delete_form, edit_form=edit_form,
-            sheet_name=sheet_name)
+            sheet=sheet, edit_sheet_form=edit_sheet_form)
 
 if __name__ == "__main__":
     app.run(debug=True)

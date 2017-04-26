@@ -12,10 +12,10 @@
   <div class="col-lg-12">
     <div class="ibox float-e-margins">
 
-        <!-- Top Section -->
-        <div class="ibox-title">
-          <h5>Your Tables</h5>
-        </div>
+      <!-- Top Section -->
+      <div class="ibox-title">
+        <h5>Your Tables</h5>
+      </div>
 
       <div class="ibox-content">
 	      <button id="new_table_button" type="button" class="btn btn-w-m btn-success" style="margin-bottom: 0;">Create New Table</button>
@@ -56,6 +56,7 @@
       </div>
       <!-- End Create Table Well -->
 
+      <!-- Contents -->
       <div class="ibox-content">
         <div class="table-responsive">
           <div role="status" aria-live="polite" style="padding-bottom: 8px;">
@@ -76,8 +77,7 @@
                 <td><a href="{{ url_for('view_sheet', sheet_name=sheet.sheet_name) }}">{{ sheet.sheet_name }}</a></td>
                 <td class="form-inline">
                   <form method="POST">
-                    <a href="{{ url_for('modify_sheet', sheet_name=sheet.sheet_name) }}" type="button" class="btn btn-xs btn-success" style="margin-bottom: 0;">Edit Columns</a>
-                    <a href="{{ url_for('view_sheet', sheet_name=sheet.sheet_name) }}" type="button" class="btn btn-xs btn-primary" style="margin-bottom: 0;">Edit Data</a>
+                    <a href="{{ url_for('modify_sheet', sheet_name=sheet.sheet_name) }}" type="button" class="btn btn-xs btn-success" style="margin-bottom: 0;">Edit Table</a>
                     {{ delete_form.delete_table_name(value=sheet.sheet_name) }}
                     {{ delete_form.delete_table_id(value=sheet.id) }}
                     {{ delete_form.submit_delete }}
@@ -90,7 +90,8 @@
           <!-- End View Table List Section -->
         </div>
       </div>
-  
+      <!-- End Contents -->
+
     </div>
   </div>
 
