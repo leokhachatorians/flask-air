@@ -37,6 +37,14 @@ class DTDataEngineSQL(DTDataEngine):
 
     def alter_column(self, dtable):
         pass
+        """Doesnt work, need to review
+        sqlalchemy.exc.ProgrammingError: (psycopg2.ProgrammingError)
+        column "col_47" cannot be cast automatically to type integer
+        HINT: You might need to specify "USING col_47::integer".
+        [SQL: '\nALTER TABLE table_10 ALTER COLUMN col_47 TYPE INTEGER']
+        """
+        #col = sqlalchemy.Column("col_{}".format(dtable.info['modifications']['id']))
+        #col.alter(type=sa_Types.Integer(),table=self.get_table(dtable))
 
     def remove_column(self, dtable):
         sqlalchemy.Column("col_{}".format(dtable.info['modifications']['id'])).drop(
