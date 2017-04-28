@@ -24,7 +24,7 @@ app.config.update(dict(
 
 app.config.from_envvar('AIR_SETTINGS', silent=True)
 
-import forms, helpers, models
+import forms, models
 
 schema_store = DTSchemaStoreSQL(session, engine)
 data_engine = DTDataEngineSQL(session, engine, metadata)

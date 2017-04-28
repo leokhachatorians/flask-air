@@ -1,5 +1,6 @@
 import sqlalchemy
 import sqlalchemy.types as sa_Types
+from migrate.changeset import *
 
 from .dtable_handle import DTableHandle
 
