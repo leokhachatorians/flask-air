@@ -1,18 +1,25 @@
+from abc import ABCMeta, abstractmethod
 import models
 import sqlalchemy
 import sqlalchemy.types as sa_Types
 from .dt_column import DTColumn
 from .dtable import DTable
 
-class DTSchema():
-    """Empty Abstract Base
-    """
+class DTSchemaStore(metaclass=ABCMeta):
+    """Empty Abstract Base"""
+
+    @abstractmethod
+    def get_schema(self, table_name, table_id=None):
+        pass
+
+    @abstractmethod
+    def set_schema(self, dtable, schema=None, sheet=None):
+        pass
+
+class DTSchemaStoreJSON(DTSchemaStore):
     pass
 
-class DTSchemaStoreJSON(DTSchema):
-    pass
-
-class DTSchemaStoreSQL(DTSchema):
+class DTSchemaStoreSQL(DTSchemaStore):
     def __init__(self, session, engine):
         self.session = session
         self.engine = engine

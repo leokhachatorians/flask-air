@@ -1,13 +1,17 @@
+from abc import ABCMeta, abstractmethod
 import sqlalchemy
 import sqlalchemy.types as sa_Types
 from migrate.changeset import *
 
 from .dtable_handle import DTableHandle
 
-class DTDataEngine():
-    """Empty Abstract Base
-    """
-    pass
+class DTDataEngine(metaclass=ABCMeta):
+    """Empty Abstract Base"""
+
+    @abstractmethod
+    def set_schema(self, dtable):
+        pass
+
 
 class DTDataEngineJSON(DTDataEngine):
     pass
