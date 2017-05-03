@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block heading %}
+    <div class="col-lg-12">
+      <div class="ibox float-e-margins">
+        <h1>BRAND</h1> 
+        <h2>User Defined Data Tables</h2>
+      </div>
+    </div>
+{% endblock heading %}
+
+{% block content %}
+  <div class="col-lg-12">
+    <div class="ibox float-e-margins">
+
+      <!-- Top Section -->
+      <div class="ibox-title">
+        <h5>Your Tables</h5>
+      </div>
+
+      <div class="ibox-content">
+	      <button id="new_table_button" type="button" class="btn btn-w-m btn-success" style="margin-bottom: 0;">Create New Table</button>
+      </div>
+      <!-- End Top Section -->
+
+      <!-- Create Table Well -->
+      <div id="create_table_well" class="ibox-content col-lg-12" style="display: none;">
+        <div class="well col-lg-3">
+          <form role="form" method="POST" class="form-inline">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th colspan="3" style="text-align: center;"><h3>New Table</h3></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style="vertical-align: middle;"><label class="col-lg-2 control-label">Table</label></td>
+                    <td>{{ new_sheet_form.sheet_name }}</td>
+                    {% for field in new_sheet_form.errors %}
+                      {% for error in new_sheet_form.errors[field] %}
+                        <td><strong>{{ error }}</strong></td>
+                      {% endfor %}
+                    {% endfor %}
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td class="form-inline">
+                      {{ new_sheet_form.submit_new_sheet }}
+                      <button type="button" id="cancel_new_table_button" class="btn btn-s btn-default" style="margin-bottom: 0; margin-left: 10px">Cancel</button>
+                    </td>
+                  </tr>
+              </tbody>
+              </table>
+            </form>
+        </div>
+      </div>
+      <!-- End Create Table Well -->
+
+      <!-- Contents -->
+      <div class="ibox-content">
+        <div class="table-responsive">
+          <div role="status" aria-live="polite" style="padding-bottom: 8px;">
+            Showing 1 to 14 of 14 entries
+          </div>
+
+          <!-- View Table List Section -->
+          <table class="table table-striped table-bordered table-hover dataTables-Example">
+            <thead>
+              <tr>
+                <th>Table Name</th>
+                <th>Commands</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for sheet in sheets %}
+              <tr>
+                <td><a href="{{ url_for('view_sheet', sheet_name=sheet.sheet_name) }}">{{ sheet.sheet_name }}</a></td>
+                <td class="form-inline">
+                  <form method="POST">
+                    {{ delete_form.delete_table_name(value=sheet.sheet_name) }}
+                    {{ delete_form.delete_table_id(value=sheet.id) }}
+                    {{ delete_form.submit_delete }}
+                  </form>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          <!-- End View Table List Section -->
+        </div>
+      </div>
+      <!-- End Contents -->
+
+    </div>
+  </div>
+
+{% endblock content %}
+
+{% block unique_scripts %}
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% endblock unique_scripts %}

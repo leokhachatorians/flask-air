@@ -30,14 +30,13 @@ schema_store = DTSchemaStoreSQL(session, engine)
 data_engine = DTDataEngineSQL(session, engine, metadata)
 
 @app.route('/get_sheet')
-def test():
+def get_sheet_data():
     sheet = session.query(models.Sheets).filter_by(sheet_name="Applesauce").first()
     schema = session.query(models.Sheets_Schema).filter(models.Sheets_Schema.sheet_id==sheet.id).all()
     dtable = schema_store.get_schema(sheet.sheet_name, sheet.id)
     handle = data_engine.create_handle(dtable)
     contents = handle.get_rows(dtable)
     contents = helpers.format_user_data(schema, contents)
-    session.close()
     return jsonify(contents)
 
 @app.route('/add_data', methods=['POST'])
@@ -54,8 +53,6 @@ def add_data():
 
     contents = handle.get_rows(dtable)
     contents = helpers.format_user_data(schema, contents)
-    session.close()
-
     return jsonify(contents)
 
 @app.route('/delete_data', methods=['POST'])
@@ -84,11 +81,10 @@ def modify_data():
 
     contents = handle.get_rows(dtable)
     contents = helpers.format_user_data(schema, contents)
-
     return jsonify(contents)
 
-@app.route('/view_sheet/<sheet_name>', methods=['GET', 'POST'])
-def test2(sheet_name):
+@app.route('/view_sheet/<sheet_name>')
+def view_sheet(sheet_name):
     sheet = session.query(models.Sheets).filter_by(sheet_name=sheet_name).first()
     schema = session.query(models.Sheets_Schema).filter(models.Sheets_Schema.sheet_id==sheet.id).all()
 
@@ -99,6 +95,22 @@ def test2(sheet_name):
     return render_template(
             'view_sheet_vue.html', sheet=sheet, add_form=add_form,
             delete_form=delete_form, edit_form=edit_form, schema=schema)
+
+@app.route('/get_sheets')
+def get_sheets():
+    sheets = session.query(models.Sheets).filter_by(user_id=1).all()
+    contents = {}
+    contents['names'] = [sheet.sheet_name for sheet in sheets]
+    return jsonify(contents)
+
+@app.route('/')
+def index():
+    sheets = session.query(models.Sheets).filter_by(user_id=1).all()
+    new_sheet_form = forms.NewSheetForm(request.form)
+    delete_form = forms.DeleteTableForm(request.form)
+    return render_template("index_vue.html", sheets=sheets,
+            new_sheet_form=new_sheet_form, delete_form=delete_form)
+
 
 if __name__ == "__main__":
     app.run(debug=True)

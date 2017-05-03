@@ -92,3 +92,4 @@ Vue.component('row-id', {
 	props: ['data'],
 	template: `<input type="hidden" v-bind:value="data.id" id="row_id">`
 })
+
