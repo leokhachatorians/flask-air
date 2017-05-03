@@ -116,15 +116,21 @@ def user_deletes_table(sheets, form):
     session.query(models.Sheets).filter_by(id=sheet_to_drop_id).delete()
     session.commit()
 
-def format_user_data(data):
+def format_user_data(schema, data):
     """
     Given various length tuples, trim the id and leave the rest
     intact to display to the user.
     """
-    content = []
-    for chunk in data:
-        rows = []
-        for i in chunk[1:]:
-            rows.append(i)
-        content.append(rows)
+    content = {'columns': [s.column_name for s in schema]}
+    content['columns'].append('Commands')
+
+    for i, _ in enumerate(data):
+        ph = '{}'.format(i)
+        content[ph] = {'cells': []}
+
+        for cell in data[i][1:]:
+            content[ph]['cells'].append(cell)
+        content[ph]['id'] = data[i][0]
     return content
+
+

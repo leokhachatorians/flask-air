@@ -18,3 +18,15 @@
 .hide-icon {
 	visibility: hidden;
 }
+
+DIV.table {
+  display:table;
+}
+
+FORM.tr, DIV.tr {
+  display:table-row;
+}
+
+SPAN.td {
+  display:table-cell;
+}

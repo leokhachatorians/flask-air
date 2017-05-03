@@ -1,7 +1,7 @@
 import os
 from flask import (
         Flask, request, session, g, redirect, url_for, abort,
-        render_template, flash, current_app
+        render_template, flash, current_app, jsonify
 )
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy import Table, MetaData
@@ -24,7 +24,7 @@ app.config.update(dict(
 
 app.config.from_envvar('AIR_SETTINGS', silent=True)
 
-import forms, models
+import forms, models, helpers
 
 schema_store = DTSchemaStoreSQL(session, engine)
 data_engine = DTDataEngineSQL(session, engine, metadata)
@@ -65,9 +65,6 @@ def view_sheet(sheet_name):
     """
     sheet = session.query(models.Sheets).filter_by(sheet_name=sheet_name).first()
     schema = session.query(models.Sheets_Schema).filter(models.Sheets_Schema.sheet_id==sheet.id).all()
-    meta = MetaData(bind=engine)
-
-    generated_table = Table("table_{}".format(sheet.id), meta, autoload=True)
 
     add_form = forms.AddDataForm(request.form)
     delete_form = forms.DeleteDataForm(request.form)
